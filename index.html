@@ -10,10 +10,16 @@
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        <form>
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-            <input type="text" placeholder="Enter Captcha" required>
+        <form action="#" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="captcha">Captcha Code:</label>
+            <input type="text" id="captcha" name="captcha" required>
+
             <button type="submit">Login</button>
         </form>
     </div>
