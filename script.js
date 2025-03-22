@@ -5,19 +5,21 @@ const productsSection = document.getElementById("productsSection");
 const waitingSection = document.getElementById("waitingSection");
 const thankYouSection = document.getElementById("thankYouSection");
 const qrPopup = document.getElementById("qrPopup");
+const purchasedCardsList = document.getElementById("purchasedCardsList");
 
 // Check user state on page load
 let loggedInUser = localStorage.getItem("loggedInUser");
-const orderTimestamp = localStorage.getItem("orderTimestamp");
+let orders = JSON.parse(localStorage.getItem("orders")) || [];
 const waitingTime = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+const failTime = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
 
 // Initial state
 if (!loggedInUser) {
     showRegister(); // Show register section by default
-} else if (orderTimestamp) {
-    checkOrderStatus();
 } else {
     showProducts();
+    displayPurchasedCards();
+    checkAllOrders();
 }
 
 // Show register section
@@ -51,27 +53,37 @@ function register() {
         return;
     }
 
-    // Get existing users from localStorage
-    let users = JSON.parse(localStorage.getItem("users")) || [];
+    try {
+        // Get existing users from localStorage
+        let users = [];
+        const storedUsers = localStorage.getItem("users");
+        if (storedUsers) {
+            users = JSON.parse(storedUsers);
+        }
 
-    // Check if username already exists
-    const userExists = users.some(user => user.username === username);
-    if (userExists) {
-        errorMessage.innerText = "Username already exists!";
+        // Check if username already exists
+        const userExists = users.some(user => user.username === username);
+        if (userExists) {
+            errorMessage.innerText = "Username already exists!";
+            errorMessage.style.display = "block";
+            return;
+        }
+
+        // Add new user to the list
+        users.push({ username, password });
+        localStorage.setItem("users", JSON.stringify(users));
+
+        // Clear form and show login section
+        document.getElementById("registerUsername").value = "";
+        document.getElementById("registerPassword").value = "";
+        errorMessage.style.display = "none";
+        alert("Registration successful! Please login.");
+        showLogin();
+    } catch (e) {
+        console.error("Error saving user to localStorage:", e);
+        errorMessage.innerText = "Failed to register. Please try again.";
         errorMessage.style.display = "block";
-        return;
     }
-
-    // Add new user to the list
-    users.push({ username, password });
-    localStorage.setItem("users", JSON.stringify(users));
-
-    // Clear form and show login section
-    document.getElementById("registerUsername").value = "";
-    document.getElementById("registerPassword").value = "";
-    errorMessage.style.display = "none";
-    alert("Registration successful! Please login.");
-    showLogin();
 }
 
 // Login function
@@ -80,17 +92,26 @@ function login() {
     const password = document.getElementById("password").value;
     const errorMessage = document.getElementById("errorMessage");
 
-    // Get users from localStorage
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    try {
+        // Get users from localStorage
+        const storedUsers = localStorage.getItem("users");
+        const users = storedUsers ? JSON.parse(storedUsers) : [];
 
-    // Check if credentials match
-    const user = users.find(user => user.username === username && user.password === password);
-    if (user) {
-        localStorage.setItem("loggedInUser", username);
-        loggedInUser = username;
-        loginSection.style.display = "none";
-        showProducts();
-    } else {
+        // Check if credentials match
+        const user = users.find(user => user.username === username && user.password === password);
+        if (user) {
+            localStorage.setItem("loggedInUser", username);
+            loggedInUser = username;
+            loginSection.style.display = "none";
+            showProducts();
+            displayPurchasedCards();
+            checkAllOrders();
+        } else {
+            errorMessage.style.display = "block";
+        }
+    } catch (e) {
+        console.error("Error retrieving users from localStorage:", e);
+        errorMessage.innerText = "Failed to login. Please try again.";
         errorMessage.style.display = "block";
     }
 }
@@ -108,8 +129,9 @@ function showProducts() {
 // Logout function
 function logout() {
     localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("orderTimestamp");
+    localStorage.removeItem("orders");
     loggedInUser = null;
+    orders = [];
     productsSection.style.display = "none";
     waitingSection.style.display = "none";
     thankYouSection.style.display = "none";
@@ -121,11 +143,6 @@ function logout() {
 
 // Buy functionality
 function buyCard(cardName, amount) {
-    if (localStorage.getItem("orderTimestamp")) {
-        alert("An order is already in progress. Please wait until it is processed.");
-        return;
-    }
-
     qrPopup.style.display = "block";
     document.getElementById("cardName").innerText = cardName;
     document.getElementById("amountToPay").innerText = amount;
@@ -138,7 +155,7 @@ function closePopup() {
 
 // Copy deposit address to clipboard
 function copyAddress() {
-    const depositAddress = document.getElementById("depositAddress").innerText;
+    const depositAddress = document.getElementById("depositAddress").innerText.trim(); // Trim to remove extra spaces
     navigator.clipboard.writeText(depositAddress).then(() => {
         alert("Deposit address copied to clipboard!");
     }).catch(err => {
@@ -148,12 +165,21 @@ function copyAddress() {
 
 // Confirm payment and start waiting time
 function confirmPayment() {
-    // Clear any existing orderTimestamp to ensure fresh start
-    localStorage.removeItem("orderTimestamp");
+    const cardName = document.getElementById("cardName").innerText;
+    const amount = document.getElementById("amountToPay").innerText;
     
-    // Set new timestamp
+    // Set new timestamp and initial payment status
     const currentTime = Date.now();
-    localStorage.setItem("orderTimestamp", currentTime.toString());
+    const newOrder = {
+        cardName: cardName,
+        amount: amount,
+        timestamp: currentTime,
+        status: "Pending"
+    };
+    
+    // Add to orders
+    orders.push(newOrder);
+    localStorage.setItem("orders", JSON.stringify(orders));
     
     // Close popup and show waiting section
     closePopup();
@@ -161,68 +187,93 @@ function confirmPayment() {
     waitingSection.style.display = "block";
     thankYouSection.style.display = "none";
     
-    // Start the timer
-    startTimer();
+    // Start the timer for this order
+    startTimer(newOrder);
 }
 
-// Check order status and handle timer
-function checkOrderStatus() {
-    const orderTime = parseInt(localStorage.getItem("orderTimestamp"));
-    if (!orderTime) {
-        // If no order timestamp, go back to products
-        showProducts();
-        return;
-    }
+// Check all orders and handle timers
+function checkAllOrders() {
+    orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.forEach(order => {
+        const currentTime = Date.now();
+        const timeElapsed = currentTime - order.timestamp;
 
-    const currentTime = Date.now();
-    const timeElapsed = currentTime - orderTime;
+        // Check if payment should fail after 1 hour
+        if (timeElapsed >= failTime && order.status === "Pending") {
+            order.status = "Failed";
+            localStorage.setItem("orders", JSON.stringify(orders));
+        }
 
-    if (timeElapsed >= waitingTime) {
-        localStorage.removeItem("orderTimestamp");
-        productsSection.style.display = "none";
-        waitingSection.style.display = "none";
-        thankYouSection.style.display = "block";
-    } else {
-        productsSection.style.display = "none";
-        waitingSection.style.display = "block";
-        thankYouSection.style.display = "none";
-        startTimer();
-    }
+        // Check if order is complete after 6 hours
+        if (timeElapsed >= waitingTime && order.status !== "Failed") {
+            order.status = "Confirmed";
+            localStorage.setItem("orders", JSON.stringify(orders));
+        }
+
+        // Update purchased cards list
+        displayPurchasedCards();
+    });
 }
 
 // Start the timer to show remaining time
-function startTimer() {
+function startTimer(order) {
     const timerElement = document.getElementById("timer");
-    const orderTime = parseInt(localStorage.getItem("orderTimestamp"));
-
-    if (!orderTime) {
-        // If no order timestamp, go back to products
-        showProducts();
-        return;
-    }
+    const paymentStatusElement = document.getElementById("paymentStatus");
 
     const interval = setInterval(() => {
         const currentTime = Date.now();
-        const timeElapsed = currentTime - orderTime;
+        const timeElapsed = currentTime - order.timestamp;
         const timeRemaining = waitingTime - timeElapsed;
 
-        if (timeRemaining <= 0) {
+        // Update payment status
+        if (timeElapsed >= failTime && order.status === "Pending") {
+            order.status = "Failed";
+            localStorage.setItem("orders", JSON.stringify(orders));
+            displayPurchasedCards();
             clearInterval(interval);
-            localStorage.removeItem("orderTimestamp");
+            showProducts();
+            return;
+        }
+
+        if (timeElapsed >= waitingTime) {
+            order.status = "Confirmed";
+            localStorage.setItem("orders", JSON.stringify(orders));
+            displayPurchasedCards();
+            clearInterval(interval);
             productsSection.style.display = "none";
             waitingSection.style.display = "none";
             thankYouSection.style.display = "block";
-        } else {
-            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-            timerElement.innerText = `${hours}h ${minutes}m ${seconds}s`;
+            return;
         }
+
+        // Update timer and status display
+        paymentStatusElement.innerText = order.status;
+        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        timerElement.innerText = `${hours}h ${minutes}m ${seconds}s`;
+
+        // Keep checking all orders in background
+        checkAllOrders();
     }, 1000);
 }
 
-// Go back to products after thank you
+// Display purchased cards
+function displayPurchasedCards() {
+    orders = JSON.parse(localStorage.getItem("orders")) || [];
+    purchasedCardsList.innerHTML = "";
+    orders.forEach(order => {
+        const cardInfo = document.createElement("p");
+        cardInfo.innerText = `${order.cardName} - ${order.amount} - ${order.status}`;
+        purchasedCardsList.appendChild(cardInfo);
+    });
+}
+
+// Go back to products
 function goToProducts() {
     thankYouSection.style.display = "none";
+    waitingSection.style.display = "none";
     showProducts();
+    displayPurchasedCards();
+    checkAllOrders();
 }
