@@ -127,3 +127,9 @@ button:hover {
     color: red;
     margin: 10px 0;
 }
+
+#paymentPendingMessage {
+    color: #dc3545; /* Red color */
+    font-weight: bold;
+    margin: 10px 0;
+}
