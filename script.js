@@ -14,6 +14,22 @@ let orders = JSON.parse(localStorage.getItem("orders")) || [];
 const waitingTime = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 const failTime = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
 
+// Default user data (hardcoded for persistence)
+const defaultUsers = [
+    { username: "lalotra123", password: "pass123" }
+];
+
+// Initialize users from localStorage or use default users
+let users = [];
+const storedUsers = localStorage.getItem("users");
+if (storedUsers) {
+    users = JSON.parse(storedUsers);
+} else {
+    // If no users in localStorage, use default users
+    users = defaultUsers;
+    localStorage.setItem("users", JSON.stringify(users));
+}
+
 // Initial state
 if (!loggedInUser) {
     showRegister(); // Show register section by default
@@ -60,6 +76,8 @@ function register() {
         const storedUsers = localStorage.getItem("users");
         if (storedUsers) {
             users = JSON.parse(storedUsers);
+        } else {
+            users = defaultUsers; // Use default users if localStorage is empty
         }
 
         // Check if username already exists
@@ -95,8 +113,14 @@ function login() {
 
     try {
         // Get users from localStorage
+        let users = [];
         const storedUsers = localStorage.getItem("users");
-        const users = storedUsers ? JSON.parse(storedUsers) : [];
+        if (storedUsers) {
+            users = JSON.parse(storedUsers);
+        } else {
+            users = defaultUsers; // Use default users if localStorage is empty
+            localStorage.setItem("users", JSON.stringify(users));
+        }
 
         // Check if credentials match
         const user = users.find(user => user.username === username && user.password === password);
