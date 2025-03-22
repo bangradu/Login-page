@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Purchase System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <!-- Register Section -->
+    <div id="registerSection">
+        <h2>Register</h2>
+        <input type="text" id="registerUsername" placeholder="Username" required>
+        <input type="password" id="registerPassword" placeholder="Password" required>
+        <button onclick="register()">Register</button>
+        <p id="registerErrorMessage" style="display: none;">Username already exists!</p>
+        <p>Already have an account? <span class="link" onclick="showLogin()">Login here</span></p>
+    </div>
+
+    <!-- Login Section -->
+    <div id="loginSection">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+        <p id="errorMessage" style="display: none;">Invalid username or password!</p>
+        <p>Don't have an account? <span class="link" onclick="showRegister()">Register here</span></p>
+    </div>
+
+    <!-- Products Section -->
+    <div id="productsSection">
+        <h2 id="welcomeMessage">Welcome!</h2>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <h3>Our Cards</h3>
+        <table id="productsTable">
+            <thead>
+                <tr>
+                    <th>BIN</th>
+                    <th>Type</th>
+                    <th>Subtype</th>
+                    <th>Expiry</th>
+                    <th>Name</th>
+                    <th>Country</th>
+                    <th>State</th>
+                    <th>Full</th>
+                    <th>Zip</th>
+                    <th>Extra Info</th>
+                    <th>Base</th>
+                    <th>Price</th>
+                    <th>Buy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>403163</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>02/30</td>
+                    <td>TERUNDA ***</td>
+                    <td>US</td>
+                    <td>SC</td>
+                    <td>Yes</td>
+                    <td>29***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$100</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 1', '$100')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>524543</td>
+                    <td>DEBIT</td>
+                    <td>STANDARD</td>
+                    <td>10/29</td>
+                    <td>SHANNON ***</td>
+                    <td>US</td>
+                    <td>IL</td>
+                    <td>Yes</td>
+                    <td>60***</td>
+                    <td>BANK OF, non-refunded</td>
+                    <td>$</td>
+                    <td>$105</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 2', '$105')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>403163</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>08/29</td>
+                    <td>RASHAAD ***</td>
+                    <td>US</td>
+                    <td>MD</td>
+                    <td>Yes</td>
+                    <td>21***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$110</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 3', '$110')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>524543</td>
+                    <td>DEBIT</td>
+                    <td>PREPAID</td>
+                    <td>01/29</td>
+                    <td>KHALID ***</td>
+                    <td>US</td>
+                    <td>CT</td>
+                    <td>Yes</td>
+                    <td>06***</td>
+                    <td>BANK OF, non-refunded</td>
+                    <td>$</td>
+                    <td>$115</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 4', '$115')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>403163</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>12/29</td>
+                    <td>JAMY ***</td>
+                    <td>US</td>
+                    <td>IL</td>
+                    <td>Yes</td>
+                    <td>60***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$120</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 5', '$120')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>515756</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>04/27</td>
+                    <td>SREE ***</td>
+                    <td>US</td>
+                    <td>IL</td>
+                    <td>Yes</td>
+                    <td>60***</td>
+                    <td>HSBC, non-refunded</td>
+                    <td>$</td>
+                    <td>$125</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 6', '$125')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>403163</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>03/29</td>
+                    <td>AMBROSIA ***</td>
+                    <td>US</td>
+                    <td>FL</td>
+                    <td>Yes</td>
+                    <td>33***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$130</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 7', '$130')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>510805</td>
+                    <td>DEBIT</td>
+                    <td>STANDARD</td>
+                    <td>03/26</td>
+                    <td>ROSALYN ***</td>
+                    <td>US</td>
+                    <td>IL</td>
+                    <td>Yes</td>
+                    <td>60***</td>
+                    <td>ING BANK, non-refunded</td>
+                    <td>$</td>
+                    <td>$135</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 8', '$135')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>440393</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>02/28</td>
+                    <td>AYE ***</td>
+                    <td>US</td>
+                    <td>IL</td>
+                    <td>Yes</td>
+                    <td>62***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$140</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 9', '$140')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>475703</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>02/28</td>
+                    <td>CHARLOTTE ***</td>
+                    <td>US</td>
+                    <td>SC</td>
+                    <td>Yes</td>
+                    <td>29***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$145</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 10', '$145')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>555753</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>12/29</td>
+                    <td>KIMBERLY ***</td>
+                    <td>US</td>
+                    <td>MD</td>
+                    <td>Yes</td>
+                    <td>21***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$150</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 11', '$150')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>512992</td>
+                    <td>DEBIT</td>
+                    <td>N/A</td>
+                    <td>01/26</td>
+                    <td>BENJAMIN ***</td>
+                    <td>US</td>
+                    <td>MA</td>
+                    <td>Yes</td>
+                    <td>01***</td>
+                    <td>CREDIT DATA, non-refunded</td>
+                    <td>$</td>
+                    <td>$155</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 12', '$155')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>510805</td>
+                    <td>DEBIT</td>
+                    <td>STANDARD</td>
+                    <td>05/27</td>
+                    <td>MELINA VANDERPOOL ***</td>
+                    <td>US</td>
+                    <td>LA</td>
+                    <td>Yes</td>
+                    <td>70***</td>
+                    <td>F.S.B., non-refunded</td>
+                    <td>$</td>
+                    <td>$160</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 13', '$160')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>544317</td>
+                    <td>CREDIT</td>
+                    <td>GOLD</td>
+                    <td>02/30</td>
+                    <td>EVA ***</td>
+                    <td>US</td>
+                    <td>CO</td>
+                    <td>Yes</td>
+                    <td>99***</td>
+                    <td>HSBC BANK NEVADA, N.A., non-refunded</td>
+                    <td>$</td>
+                    <td>$165</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 14', '$165')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>411770</td>
+                    <td>DEBIT</td>
+                    <td>PLATINUM</td>
+                    <td>01/30</td>
+                    <td>HALEY N/A ***</td>
+                    <td>US</td>
+                    <td>MA</td>
+                    <td>Yes</td>
+                    <td>02***</td>
+                    <td>net refundable</td>
+                    <td>$</td>
+                    <td>$170</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 15', '$170')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>529580</td>
+                    <td>DEBIT</td>
+                    <td>PREPAID</td>
+                    <td>12/27</td>
+                    <td>SAVANNAH ***</td>
+                    <td>US</td>
+                    <td>IL</td>
+                    <td>Yes</td>
+                    <td>62***</td>
+                    <td>VINCENT, LTD., non-refunded</td>
+                    <td>$</td>
+                    <td>$175</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 16', '$175')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>446613</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>02/30</td>
+                    <td>DAVID ***</td>
+                    <td>US</td>
+                    <td>CT</td>
+                    <td>Yes</td>
+                    <td>06***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$180</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 17', '$180')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>406032</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>06/29</td>
+                    <td>JESSICA ***</td>
+                    <td>US</td>
+                    <td>IN</td>
+                    <td>Yes</td>
+                    <td>46***</td>
+                    <td>CHASE BANK, non-refunded</td>
+                    <td>$</td>
+                    <td>$185</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 18', '$185')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>519385</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>02/30</td>
+                    <td>MORGAN ***</td>
+                    <td>US</td>
+                    <td>LA</td>
+                    <td>Yes</td>
+                    <td>77***</td>
+                    <td>BANK OF, non-refunded</td>
+                    <td>$</td>
+                    <td>$190</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 19', '$190')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>475055</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>04/29</td>
+                    <td>LEAH ***</td>
+                    <td>US</td>
+                    <td>AZ</td>
+                    <td>Yes</td>
+                    <td>85***</td>
+                    <td>JPMORGAN CHASE BANK, non-refunded</td>
+                    <td>$</td>
+                    <td>$195</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 20', '$195')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>483312</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>02/28</td>
+                    <td>GARRET ***</td>
+                    <td>US</td>
+                    <td>MI</td>
+                    <td>Yes</td>
+                    <td>48***</td>
+                    <td>JPMORGAN CHASE BANK, non-refunded</td>
+                    <td>$</td>
+                    <td>$200</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 21', '$200')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>546629</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>02/26</td>
+                    <td>KATHY ***</td>
+                    <td>US</td>
+                    <td>FL</td>
+                    <td>Yes</td>
+                    <td>60***</td>
+                    <td>SALL, non-refunded</td>
+                    <td>$</td>
+                    <td>$205</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 22', '$205')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>426697</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>02/27</td>
+                    <td>OCONNOR N/A ***</td>
+                    <td>US</td>
+                    <td>CO</td>
+                    <td>Yes</td>
+                    <td>99***</td>
+                    <td>WELLS FARGO, non-refunded</td>
+                    <td>$</td>
+                    <td>$210</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 23', '$210')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>373339</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>03/29</td>
+                    <td>JESSICA CARDONA ***</td>
+                    <td>US</td>
+                    <td>CO</td>
+                    <td>Yes</td>
+                    <td>99***</td>
+                    <td>COMPANY, non-refunded</td>
+                    <td>$</td>
+                    <td>$215</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 24', '$215')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>483316</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>07/27</td>
+                    <td>BROOKE ***</td>
+                    <td>US</td>
+                    <td>ID</td>
+                    <td>Yes</td>
+                    <td>83***</td>
+                    <td>JPMORGAN CHASE BANK, non-refunded</td>
+                    <td>$</td>
+                    <td>$220</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 25', '$220')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>482421</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>01/29</td>
+                    <td>KATHLEEN ***</td>
+                    <td>US</td>
+                    <td>PA</td>
+                    <td>Yes</td>
+                    <td>15***</td>
+                    <td>1ST SUMMIT BANK, non-refunded</td>
+                    <td>$</td>
+                    <td>$225</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 26', '$225')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>436172</td>
+                    <td>DEBIT</td>
+                    <td>CLASSIC</td>
+                    <td>12/27</td>
+                    <td>RACHEL ***</td>
+                    <td>US</td>
+                    <td>CT</td>
+                    <td>Yes</td>
+                    <td>06***</td>
+                    <td>UNION, non-refunded</td>
+                    <td>$</td>
+                    <td>$230</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 27', '$230')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>601100</td>
+                    <td>CREDIT</td>
+                    <td>PLATINUM</td>
+                    <td>08/25</td>
+                    <td>KATE ***</td>
+                    <td>US</td>
+                    <td>AL</td>
+                    <td>Yes</td>
+                    <td>35***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$235</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 28', '$235')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>601100</td>
+                    <td>CREDIT</td>
+                    <td>PLATINUM</td>
+                    <td>12/27</td>
+                    <td>SHAYNA ***</td>
+                    <td>US</td>
+                    <td>IL</td>
+                    <td>Yes</td>
+                    <td>60***</td>
+                    <td>N/A, non-refunded</td>
+                    <td>$</td>
+                    <td>$240</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 29', '$240')">Buy</button></td>
+                </tr>
+                <tr>
+                    <td>379818</td>
+                    <td>CREDIT</td>
+                    <td>N/A</td>
+                    <td>11/27</td>
+                    <td>ANGEL N/A ***</td>
+                    <td>US</td>
+                    <td>WA</td>
+                    <td>Yes</td>
+                    <td>05***</td>
+                    <td>EXPRESS US, non-refunded</td>
+                    <td>$</td>
+                    <td>$245</td>
+                    <td><button class="buy-btn" onclick="buyCard('Card 30', '$245')">Buy</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Waiting Section -->
+    <div id="waitingSection">
+        <p>Your order is being processed, please wait for 6 hours.</p>
+        <p>Time remaining: <span id="timer"></span></p>
+    </div>
+
+    <!-- Thank You Section -->
+    <div id="thankYouSection">
+        <h2>Thank You!</h2>
+        <p>Your order has been successfully processed.</p>
+        <button onclick="goToProducts()">Back to Products</button>
+    </div>
+</div>
+
+<!-- Popup for Deposit Address -->
+<div id="qrPopup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">×</span>
+        <h3>Pay with BTC</h3>
+        <p>Please send the payment for <span id="cardName"></span>.</p>
+        <p>Amount to Pay: <span id="amountToPay"></span></p>
+        <p>Deposit Address: <span id="depositAddress">1GxPWCrYtdSNQwCuBPFZnWHADU7NNJu99</span></p>
+        <button onclick="copyAddress()">Copy Address</button>
+        <button onclick="confirmPayment()">I Have Paid</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
