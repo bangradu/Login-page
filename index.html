@@ -504,13 +504,21 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- Purchased Cards Section -->
+        <div id="purchasedCardsSection">
+            <h3>Purchased Cards</h3>
+            <div id="purchasedCardsList"></div>
+        </div>
     </div>
 
     <!-- Waiting Section -->
     <div id="waitingSection">
         <p id="paymentPendingMessage">Your payment is pending.</p>
+        <p>Payment Status: <span id="paymentStatus">Pending</span></p>
         <p>Your order is being processed, please wait for 6 hours.</p>
         <p>Time remaining: <span id="timer"></span></p>
+        <button onclick="goToProducts()">Back to Products</button>
     </div>
 
     <!-- Thank You Section -->
@@ -528,7 +536,7 @@
         <h3>Pay with BTC</h3>
         <p>Please send the payment for <span id="cardName"></span>.</p>
         <p>Amount to Pay: <span id="amountToPay"></span></p>
-        <p>Deposit Address: <span id="depositAddress">1GxPWCrYtdSNQwCuBPFZnWHADU7NNJu99</span></p>
+        <p>Deposit Address: <span id="depositAddress">1GxPWCrytdSNQwCubPfNZnWHAdU7NNJu99</span></p>
         <button onclick="copyAddress()">Copy Address</button>
         <button onclick="confirmPayment()">I Have Paid</button>
     </div>
