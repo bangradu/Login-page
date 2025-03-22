@@ -141,36 +141,42 @@ button:hover {
 
 /* Message Box Section Styling */
 #messageBoxSection {
-    margin-top: 30px;
+    margin: 10px 0;
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #ddd;
     overflow: hidden;
+    width: 300px; /* Compact width */
+    display: inline-block;
+    margin-right: 20px;
 }
 
 .message-header {
     background: linear-gradient(135deg, #ff6f61, #ff9a8b);
-    padding: 15px;
+    padding: 10px;
     text-align: center;
     color: white;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .message-header h3 {
     margin: 0;
-    font-size: 22px;
+    font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
 }
 
 .message-content {
-    padding: 20px;
+    padding: 10px;
     text-align: center;
     cursor: pointer;
     background-color: #f9f9f9;
     transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .message-content:hover {
@@ -179,44 +185,52 @@ button:hover {
 
 .message-content p {
     margin: 0;
-    font-size: 16px;
+    font-size: 14px;
     color: #666;
 }
 
-/* Purchased Cards Section Styling */
+.envelope-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+/* Orders Section Styling */
 #purchasedCardsSection {
-    margin-top: 30px;
+    margin: 10px 0;
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #ddd;
     overflow: hidden;
+    width: 300px; /* Compact width */
+    display: inline-block;
 }
 
 .purchased-header {
     background: linear-gradient(135deg, #007BFF, #00C4B4);
-    padding: 20px;
+    padding: 10px;
     text-align: center;
     color: white;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .purchased-header h3 {
     margin: 0;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
 }
 
 #purchasedCardsList {
-    padding: 15px;
+    padding: 10px;
 }
 
 .card-item {
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 8px;
     border-bottom: 1px solid #eee;
     transition: background-color 0.3s;
     cursor: pointer;
@@ -231,22 +245,22 @@ button:hover {
 }
 
 .card-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 15px;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
     border-radius: 5px;
 }
 
 .card-details {
     flex: 1;
-    font-size: 16px;
+    font-size: 14px;
     color: #333;
 }
 
 .status-label {
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 12px;
     font-weight: bold;
     color: white;
 }
@@ -264,15 +278,16 @@ button:hover {
 }
 
 .expand-content {
-    padding: 10px;
+    padding: 8px;
     background-color: #f9f9f9;
     border-top: 1px solid #eee;
-    margin-top: 10px;
+    margin-top: 8px;
     transition: all 0.3s ease;
 }
 
 .expand-content p {
-    margin: 5px 0;
+    margin: 4px 0;
+    font-size: 12px;
 }
 
 .payment-pending {
