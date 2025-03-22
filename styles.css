@@ -175,6 +175,7 @@ button:hover {
     padding: 10px;
     border-bottom: 1px solid #eee;
     transition: background-color 0.3s;
+    cursor: pointer;
 }
 
 .card-item:hover {
@@ -216,4 +217,32 @@ button:hover {
 
 .status-confirmed {
     background-color: #28a745; /* Green for Confirmed */
+}
+
+.expand-content {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #eee;
+    margin-top: 10px;
+    display: none;
+    transition: all 0.3s ease;
+}
+
+.expand-content p {
+    margin: 5px 0;
+}
+
+.payment-pending {
+    color: #dc3545; /* Red color */
+    font-weight: bold;
+}
+
+.payment-status {
+    color: #28a745; /* Green color */
+    font-weight: bold;
+}
+
+.card-timer {
+    font-weight: bold;
+    color: #333;
 }
