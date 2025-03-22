@@ -6,6 +6,7 @@ const waitingSection = document.getElementById("waitingSection");
 const thankYouSection = document.getElementById("thankYouSection");
 const qrPopup = document.getElementById("qrPopup");
 const purchasedCardsList = document.getElementById("purchasedCardsList");
+const messageContent = document.getElementById("messageContent");
 
 // Check user state on page load
 let loggedInUser = localStorage.getItem("loggedInUser");
@@ -317,7 +318,7 @@ function displayPurchasedCards() {
         // Create expandable content
         const expandContent = document.createElement("div");
         expandContent.classList.add("expand-content");
-        expandContent.style.display = "none"; // Initially hidden
+        expandContent.style.display = "block"; // By default open
 
         // Add payment pending message
         const paymentPending = document.createElement("p");
@@ -344,13 +345,15 @@ function displayPurchasedCards() {
         cardItem.appendChild(statusLabel);
         cardItem.appendChild(expandContent);
 
+        // Start timer immediately since content is open by default
+        if (order.status === "Pending") {
+            startCardTimer(order, timerElement);
+        }
+
         // Add click event to toggle expand content
         cardItem.addEventListener("click", () => {
             const isExpanded = expandContent.style.display === "block";
             expandContent.style.display = isExpanded ? "none" : "block";
-            if (!isExpanded && order.status === "Pending") {
-                startCardTimer(order, timerElement);
-            }
         });
 
         purchasedCardsList.appendChild(cardItem);
@@ -365,3 +368,8 @@ function goToProducts() {
     displayPurchasedCards();
     checkAllOrders();
 }
+
+// Add click event for Message Box
+messageContent.addEventListener("click", () => {
+    messageContent.innerHTML = "<p>No messages</p>";
+});
