@@ -33,6 +33,26 @@
         <h2 id="welcomeMessage">Welcome!</h2>
         <button class="logout-btn" onclick="logout()">Logout</button>
         <h3>Our Cards</h3>
+
+        <!-- Message Box Section -->
+        <div id="messageBoxSection">
+            <div class="message-header">
+                <h3>Messages</h3>
+            </div>
+            <div id="messageContent" class="message-content">
+                <img src="envelope-icon.png" alt="Envelope Icon" class="envelope-icon">
+                <p>Click to view messages</p>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div id="purchasedCardsSection">
+            <div class="purchased-header">
+                <h3>Orders</h3>
+            </div>
+            <div id="purchasedCardsList"></div>
+        </div>
+
         <table id="productsTable">
             <thead>
                 <tr>
@@ -504,24 +524,6 @@
                 </tr>
             </tbody>
         </table>
-
-        <!-- Message Box Section -->
-        <div id="messageBoxSection">
-            <div class="message-header">
-                <h3>Messages</h3>
-            </div>
-            <div id="messageContent" class="message-content">
-                <p>Click to view messages</p>
-            </div>
-        </div>
-
-        <!-- Purchased Cards Section -->
-        <div id="purchasedCardsSection">
-            <div class="purchased-header">
-                <h3>Purchased Cards</h3>
-            </div>
-            <div id="purchasedCardsList"></div>
-        </div>
     </div>
 
     <!-- Waiting Section -->
