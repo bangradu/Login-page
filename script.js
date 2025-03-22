@@ -1,279 +1,219 @@
-// Get all sections
-const registerSection = document.getElementById("registerSection");
-const loginSection = document.getElementById("loginSection");
-const productsSection = document.getElementById("productsSection");
-const waitingSection = document.getElementById("waitingSection");
-const thankYouSection = document.getElementById("thankYouSection");
-const qrPopup = document.getElementById("qrPopup");
-const purchasedCardsList = document.getElementById("purchasedCardsList");
-
-// Check user state on page load
-let loggedInUser = localStorage.getItem("loggedInUser");
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
-const waitingTime = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
-const failTime = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
-
-// Initial state
-if (!loggedInUser) {
-    showRegister(); // Show register section by default
-} else {
-    showProducts();
-    displayPurchasedCards();
-    checkAllOrders();
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f0f0;
 }
 
-// Show register section
-function showRegister() {
-    registerSection.style.display = "block";
-    loginSection.style.display = "none";
-    productsSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-// Show login section
-function showLogin() {
-    registerSection.style.display = "none";
-    loginSection.style.display = "block";
-    productsSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
+h2, h3 {
+    text-align: center;
+    color: #333;
 }
 
-// Register function
-function register() {
-    const username = document.getElementById("registerUsername").value;
-    const password = document.getElementById("registerPassword").value;
-    const errorMessage = document.getElementById("registerErrorMessage");
-
-    // Check if username or password is empty
-    if (!username || !password) {
-        errorMessage.innerText = "Please fill in all fields!";
-        errorMessage.style.display = "block";
-        return;
-    }
-
-    try {
-        // Get existing users from localStorage
-        let users = [];
-        const storedUsers = localStorage.getItem("users");
-        if (storedUsers) {
-            users = JSON.parse(storedUsers);
-        }
-
-        // Check if username already exists
-        const userExists = users.some(user => user.username === username);
-        if (userExists) {
-            errorMessage.innerText = "Username already exists!";
-            errorMessage.style.display = "block";
-            return;
-        }
-
-        // Add new user to the list
-        users.push({ username, password });
-        localStorage.setItem("users", JSON.stringify(users));
-
-        // Clear form and show login section
-        document.getElementById("registerUsername").value = "";
-        document.getElementById("registerPassword").value = "";
-        errorMessage.style.display = "none";
-        alert("Registration successful! Please login.");
-        showLogin();
-    } catch (e) {
-        console.error("Error saving user to localStorage:", e);
-        errorMessage.innerText = "Failed to register. Please try again.";
-        errorMessage.style.display = "block";
-    }
+input, button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-// Login function
-function login() {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const errorMessage = document.getElementById("errorMessage");
-
-    try {
-        // Get users from localStorage
-        const storedUsers = localStorage.getItem("users");
-        const users = storedUsers ? JSON.parse(storedUsers) : [];
-
-        // Check if credentials match
-        const user = users.find(user => user.username === username && user.password === password);
-        if (user) {
-            localStorage.setItem("loggedInUser", username);
-            loggedInUser = username;
-            loginSection.style.display = "none";
-            showProducts();
-            displayPurchasedCards();
-            checkAllOrders();
-        } else {
-            errorMessage.style.display = "block";
-        }
-    } catch (e) {
-        console.error("Error retrieving users from localStorage:", e);
-        errorMessage.innerText = "Failed to login. Please try again.";
-        errorMessage.style.display = "block";
-    }
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
-// Show products section
-function showProducts() {
-    productsSection.style.display = "block";
-    registerSection.style.display = "none";
-    loginSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
-    document.getElementById("welcomeMessage").innerText = `Welcome, ${loggedInUser}!`;
+button:hover {
+    background-color: #0056b3;
 }
 
-// Logout function
-function logout() {
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("orders");
-    loggedInUser = null;
-    orders = [];
-    productsSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
-    showLogin();
-    document.getElementById("username").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("errorMessage").style.display = "none";
+.logout-btn {
+    background-color: #dc3545;
 }
 
-// Buy functionality
-function buyCard(cardName, amount) {
-    qrPopup.style.display = "block";
-    document.getElementById("cardName").innerText = cardName;
-    document.getElementById("amountToPay").innerText = amount;
+.logout-btn:hover {
+    background-color: #c82333;
 }
 
-// Close popup
-function closePopup() {
-    qrPopup.style.display = "none";
+.buy-btn {
+    background-color: #28a745;
+    width: auto;
+    display: inline-block;
 }
 
-// Copy deposit address to clipboard
-function copyAddress() {
-    const depositAddress = document.getElementById("depositAddress").innerText.trim(); // Trim to remove extra spaces
-    navigator.clipboard.writeText(depositAddress).then(() => {
-        alert("Deposit address copied to clipboard!");
-    }).catch(err => {
-        alert("Failed to copy address: " + err);
-    });
+.buy-btn:hover {
+    background-color: #218838;
 }
 
-// Confirm payment and start waiting time
-function confirmPayment() {
-    const cardName = document.getElementById("cardName").innerText;
-    const amount = document.getElementById("amountToPay").innerText;
-    
-    // Set new timestamp and initial payment status
-    const currentTime = Date.now();
-    const newOrder = {
-        cardName: cardName,
-        amount: amount,
-        timestamp: currentTime,
-        status: "Pending"
-    };
-    
-    // Add to orders
-    orders.push(newOrder);
-    localStorage.setItem("orders", JSON.stringify(orders));
-    
-    // Close popup and show waiting section
-    closePopup();
-    productsSection.style.display = "none";
-    waitingSection.style.display = "block";
-    thankYouSection.style.display = "none";
-    
-    // Start the timer for this order
-    startTimer(newOrder);
+.link {
+    color: #007BFF;
+    cursor: pointer;
 }
 
-// Check all orders and handle timers
-function checkAllOrders() {
-    orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.forEach(order => {
-        const currentTime = Date.now();
-        const timeElapsed = currentTime - order.timestamp;
-
-        // Check if payment should fail after 1 hour
-        if (timeElapsed >= failTime && order.status === "Pending") {
-            order.status = "Failed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-        }
-
-        // Check if order is complete after 6 hours
-        if (timeElapsed >= waitingTime && order.status !== "Failed") {
-            order.status = "Confirmed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-        }
-
-        // Update purchased cards list
-        displayPurchasedCards();
-    });
+.link:hover {
+    text-decoration: underline;
 }
 
-// Start the timer to show remaining time
-function startTimer(order) {
-    const timerElement = document.getElementById("timer");
-    const paymentStatusElement = document.getElementById("paymentStatus");
-
-    const interval = setInterval(() => {
-        const currentTime = Date.now();
-        const timeElapsed = currentTime - order.timestamp;
-        const timeRemaining = waitingTime - timeElapsed;
-
-        // Update payment status
-        if (timeElapsed >= failTime && order.status === "Pending") {
-            order.status = "Failed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-            displayPurchasedCards();
-            clearInterval(interval);
-            showProducts();
-            return;
-        }
-
-        if (timeElapsed >= waitingTime) {
-            order.status = "Confirmed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-            displayPurchasedCards();
-            clearInterval(interval);
-            productsSection.style.display = "none";
-            waitingSection.style.display = "none";
-            thankYouSection.style.display = "block";
-            return;
-        }
-
-        // Update timer and status display
-        paymentStatusElement.innerText = order.status;
-        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-        timerElement.innerText = `${hours}h ${minutes}m ${seconds}s`;
-
-        // Keep checking all orders in background
-        checkAllOrders();
-    }, 1000);
+#registerSection, #loginSection, #productsSection, #waitingSection, #thankYouSection {
+    display: none;
+    text-align: center;
 }
 
-// Display purchased cards
-function displayPurchasedCards() {
-    orders = JSON.parse(localStorage.getItem("orders")) || [];
-    purchasedCardsList.innerHTML = "";
-    orders.forEach(order => {
-        const cardInfo = document.createElement("p");
-        cardInfo.innerText = `${order.cardName} - ${order.amount} - ${order.status}`;
-        purchasedCardsList.appendChild(cardInfo);
-    });
+#productsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-// Go back to products
-function goToProducts() {
-    thankYouSection.style.display = "none";
-    waitingSection.style.display = "none";
-    showProducts();
-    displayPurchasedCards();
-    checkAllOrders();
+#productsTable th, #productsTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#productsTable th {
+    background-color: #007BFF;
+    color: white;
+}
+
+#productsTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#productsTable tr:hover {
+    background-color: #ddd;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    width: 300px;
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#registerErrorMessage, #errorMessage {
+    color: red;
+    margin: 10px 0;
+}
+
+#paymentPendingMessage {
+    color: #dc3545; /* Red color */
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+#paymentStatus {
+    color: #28a745; /* Green color */
+    font-weight: bold;
+}
+
+/* Purchased Cards Section Styling */
+#purchasedCardsSection {
+    margin-top: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+.purchased-header {
+    background: linear-gradient(135deg, #007BFF, #00C4B4);
+    padding: 20px;
+    text-align: center;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.purchased-header h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#purchasedCardsList {
+    padding: 15px;
+}
+
+.card-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s;
+}
+
+.card-item:hover {
+    background-color: #f9f9f9;
+}
+
+.card-item:last-child {
+    border-bottom: none;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    border-radius: 5px;
+}
+
+.card-details {
+    flex: 1;
+    font-size: 16px;
+    color: #333;
+}
+
+.status-label {
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
+
+.status-pending {
+    background-color: #dc3545; /* Red for Pending */
+}
+
+.status-failed {
+    background-color: #ff851b; /* Orange for Failed */
+}
+
+.status-confirmed {
+    background-color: #28a745; /* Green for Confirmed */
 }
