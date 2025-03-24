@@ -196,14 +196,40 @@
             color: #ff0000;
         }
 
-        /* Cards Section */
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+        /* Categories Section */
+        .category-section {
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .category-section h2 {
+            font-size: 20px;
+            color: #00ff00;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 5px;
+        }
+
+        .cards-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 10px;
+        }
+
+        .cards-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .cards-container::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 10px;
+        }
+
+        .cards-container::-webkit-scrollbar-track {
+            background: #333;
         }
 
         .card {
@@ -212,6 +238,7 @@
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
             padding: 15px;
             text-align: center;
+            min-width: 200px;
             transition: transform 0.3s, box-shadow 0.3s;
             border: 1px solid #00ff00;
         }
@@ -222,14 +249,39 @@
         }
 
         .card h3 {
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 10px;
             color: #00ff00;
         }
 
         .card p {
-            font-size: 14px;
+            font-size: 12px;
             color: #e0e0e0;
+            margin-bottom: 5px;
+        }
+
+        .card .rate {
+            font-size: 14px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .card .stock {
+            font-size: 12px;
+            color: #00ff00;
+            margin-top: 5px;
+        }
+
+        .card .risk {
+            font-size: 12px;
+            color: #ff0000;
+            margin-top: 5px;
+        }
+
+        .card .warranty {
+            font-size: 12px;
+            color: #00ff00;
+            margin-top: 5px;
         }
 
         /* Cart Section */
@@ -296,6 +348,53 @@
             background-color: #00cc00;
         }
 
+        /* Customer Support Section */
+        .support-section {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #00ff00;
+        }
+
+        .support-section h2 {
+            font-size: 20px;
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .support-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .support-section input, .support-section textarea {
+            padding: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        .support-section button {
+            padding: 10px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .support-section button:hover {
+            background-color: #cc0000;
+        }
+
         /* Message Box (Error Fallback) */
         .error-fallback {
             text-align: center;
@@ -358,7 +457,7 @@
         }
 
         @media (max-width: 400px) {
-            .login-container, .cart-container {
+            .login-container, .cart-container, .support-section {
                 margin: 10px;
             }
         }
@@ -369,7 +468,7 @@
     <!-- Navigation Bar -->
     <div class="navbar">
         <a href="#" onclick="history.back()">Back</a>
-        <a href="#">Dark Market</a>
+        <a href="#">Dark CC Market</a>
     </div>
 
     <!-- Loading Spinner -->
@@ -416,24 +515,51 @@
         <h2>🛒 YOUR CART</h2>
         <div class="cart-items" id="cartItems">
             <div class="cart-item">
-                <p>USA CC - 4532-XXXX-XXXX-1234 (Exp: 12/25, CVV: 123)</p>
+                <p>USA Premium CC - $80 (100% Validated)</p>
                 <button onclick="removeFromCart(this)">Remove</button>
             </div>
             <div class="cart-item">
-                <p>Japan CC - 5423-XXXX-XXXX-5678 (Exp: 09/24, CVV: 456)</p>
+                <p>Japan Bulk CC - $60 (Medium Risk)</p>
                 <button onclick="removeFromCart(this)">Remove</button>
             </div>
             <div class="cart-item">
-                <p>Brazil CC - 3782-XXXX-XXXX-9012 (Exp: 06/26, CVV: 789)</p>
+                <p>Germany High Limit CC - $90 (100% Validated)</p>
                 <button onclick="removeFromCart(this)">Remove</button>
             </div>
         </div>
-        <button class="checkout-btn" onclick="alert('Proceeding to checkout...')">Checkout</button>
+        <button class="checkout-btn" onclick="checkoutWithBTC()">Checkout with BTC</button>
     </div>
 
-    <!-- Cards Container -->
-    <div class="cards-container" id="cardsContainer">
-        <!-- Cards will be added dynamically via JavaScript -->
+    <!-- Categories and Cards -->
+    <div class="category-section" id="premiumCCs">
+        <h2>Premium CCs</h2>
+        <div class="cards-container" id="premiumCards"></div>
+    </div>
+
+    <div class="category-section" id="bulkDeals">
+        <h2>Bulk Deals</h2>
+        <div class="cards-container" id="bulkCards"></div>
+    </div>
+
+    <div class="category-section" id="highLimit">
+        <h2>High Limit CCs</h2>
+        <div class="cards-container" id="highLimitCards"></div>
+    </div>
+
+    <div class="category-section" id="lowRisk">
+        <h2>Low Risk CCs</h2>
+        <div class="cards-container" id="lowRiskCards"></div>
+    </div>
+
+    <!-- Customer Support Section -->
+    <div class="support-section">
+        <h2>Customer Support</h2>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <textarea placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
     </div>
 
     <!-- Fallback Content for Error -->
@@ -447,175 +573,33 @@
     <a href="#" class="live-chat">💬 Live Chat</a>
 
     <script>
-        // List of 150 countries (excluding India) with CC buyer context
+        // List of premium countries with updated rates, risk, and warranty
         const countries = [
-            { name: "USA", flag: "🇺🇸", description: "Premium CCs - High Balance" },
-            { name: "Japan", flag: "🇯🇵", description: "Fresh CCs - Low Risk" },
-            { name: "Brazil", flag: "🇧🇷", description: "Cheap CCs - Bulk Deals" },
-            { name: "Germany", flag: "🇩🇪", description: "Verified CCs - Secure" },
-            { name: "France", flag: "🇫🇷", description: "Elite CCs - High Limit" },
-            { name: "Australia", flag: "🇦🇺", description: "Fresh CCs - Fast Delivery" },
-            { name: "Canada", flag: "🇨🇦", description: "Premium CCs - Trusted" },
-            { name: "South Korea", flag: "🇰🇷", description: "Cheap CCs - Bulk Offers" },
-            { name: "Italy", flag: "🇮🇹", description: "Verified CCs - Secure" },
-            { name: "UK", flag: "🇬🇧", description: "Elite CCs - High Balance" },
-            { name: "Spain", flag: "🇪🇸", description: "Fresh CCs - Low Risk" },
-            { name: "Mexico", flag: "🇲🇽", description: "Cheap CCs - Bulk Deals" },
-            { name: "China", flag: "🇨🇳", description: "Verified CCs - Secure" },
-            { name: "Russia", flag: "🇷🇺", description: "Premium CCs - High Limit" },
-            { name: "South Africa", flag: "🇿🇦", description: "Fresh CCs - Fast Delivery" },
-            { name: "Argentina", flag: "🇦🇷", description: "Cheap CCs - Bulk Offers" },
-            { name: "Egypt", flag: "🇪🇬", description: "Verified CCs - Secure" },
-            { name: "Turkey", flag: "🇹🇷", description: "Elite CCs - High Balance" },
-            { name: "Thailand", flag: "🇹🇭", description: "Fresh CCs - Low Risk" },
-            { name: "New Zealand", flag: "🇳🇿", description: "Premium CCs - Trusted" },
-            { name: "Sweden", flag: "🇸🇪", description: "Cheap CCs - Bulk Deals" },
-            { name: "Netherlands", flag: "🇳🇱", description: "Verified CCs - Secure" },
-            { name: "Switzerland", flag: "🇨🇭", description: "Elite CCs - High Limit" },
-            { name: "Greece", flag: "🇬🇷", description: "Fresh CCs - Fast Delivery" },
-            { name: "Portugal", flag: "🇵🇹", description: "Premium CCs - Trusted" },
-            { name: "Norway", flag: "🇳🇴", description: "Cheap CCs - Bulk Offers" },
-            { name: "Denmark", flag: "🇩🇰", description: "Verified CCs - Secure" },
-            { name: "Finland", flag: "🇫🇮", description: "Elite CCs - High Balance" },
-            { name: "Ireland", flag: "🇮🇪", description: "Fresh CCs - Low Risk" },
-            { name: "Belgium", flag: "🇧🇪", description: "Premium CCs - Trusted" },
-            { name: "Austria", flag: "🇦🇹", description: "Cheap CCs - Bulk Deals" },
-            { name: "Poland", flag: "🇵🇱", description: "Verified CCs - Secure" },
-            { name: "Hungary", flag: "🇭🇺", description: "Elite CCs - High Limit" },
-            { name: "Czech Republic", flag: "🇨🇿", description: "Fresh CCs - Fast Delivery" },
-            { name: "Slovakia", flag: "🇸🇰", description: "Premium CCs - Trusted" },
-            { name: "Romania", flag: "🇷🇴", description: "Cheap CCs - Bulk Offers" },
-            { name: "Bulgaria", flag: "🇧🇬", description: "Verified CCs - Secure" },
-            { name: "Croatia", flag: "🇭🇷", description: "Elite CCs - High Balance" },
-            { name: "Serbia", flag: "🇷🇸", description: "Fresh CCs - Low Risk" },
-            { name: "Bosnia", flag: "🇧🇦", description: "Premium CCs - Trusted" },
-            { name: "Albania", flag: "🇦🇱", description: "Cheap CCs - Bulk Deals" },
-            { name: "Montenegro", flag: "🇲🇪", description: "Verified CCs - Secure" },
-            { name: "Macedonia", flag: "🇲🇰", description: "Elite CCs - High Limit" },
-            { name: "Slovenia", flag: "🇸🇮", description: "Fresh CCs - Fast Delivery" },
-            { name: "Estonia", flag: "🇪🇪", description: "Premium CCs - Trusted" },
-            { name: "Latvia", flag: "🇱🇻", description: "Cheap CCs - Bulk Offers" },
-            { name: "Lithuania", flag: "🇱🇹", description: "Verified CCs - Secure" },
-            { name: "Ukraine", flag: "🇺🇦", description: "Elite CCs - High Balance" },
-            { name: "Belarus", flag: "🇧🇾", description: "Fresh CCs - Low Risk" },
-            { name: "Georgia", flag: "🇬🇪", description: "Premium CCs - Trusted" },
-            { name: "Armenia", flag: "🇦🇲", description: "Cheap CCs - Bulk Deals" },
-            { name: "Azerbaijan", flag: "🇦🇿", description: "Verified CCs - Secure" },
-            { name: "Kazakhstan", flag: "🇰🇿", description: "Elite CCs - High Limit" },
-            { name: "Uzbekistan", flag: "🇺🇿", description: "Fresh CCs - Fast Delivery" },
-            { name: "Turkmenistan", flag: "🇹🇲", description: "Premium CCs - Trusted" },
-            { name: "Kyrgyzstan", flag: "🇰🇬", description: "Cheap CCs - Bulk Offers" },
-            { name: "Tajikistan", flag: "🇹🇯", description: "Verified CCs - Secure" },
-            { name: "Mongolia", flag: "🇲🇳", description: "Elite CCs - High Balance" },
-            { name: "Vietnam", flag: "🇻🇳", description: "Fresh CCs - Low Risk" },
-            { name: "Philippines", flag: "🇵🇭", description: "Premium CCs - Trusted" },
-            { name: "Malaysia", flag: "🇲🇾", description: "Cheap CCs - Bulk Deals" },
-            { name: "Singapore", flag: "🇸🇬", description: "Verified CCs - Secure" },
-            { name: "Indonesia", flag: "🇮🇩", description: "Elite CCs - High Limit" },
-            { name: "Cambodia", flag: "🇰🇭", description: "Fresh CCs - Fast Delivery" },
-            { name: "Laos", flag: "🇱🇦", description: "Premium CCs - Trusted" },
-            { name: "Myanmar", flag: "🇲🇲", description: "Cheap CCs - Bulk Offers" },
-            { name: "Nepal", flag: "🇳🇵", description: "Verified CCs - Secure" },
-            { name: "Bhutan", flag: "🇧🇹", description: "Elite CCs - High Balance" },
-            { name: "Sri Lanka", flag: "🇱🇰", description: "Fresh CCs - Low Risk" },
-            { name: "Maldives", flag: "🇲🇻", description: "Premium CCs - Trusted" },
-            { name: "Bangladesh", flag: "🇧🇩", description: "Cheap CCs - Bulk Deals" },
-            { name: "Pakistan", flag: "🇵🇰", description: "Verified CCs - Secure" },
-            { name: "Afghanistan", flag: "🇦🇫", description: "Elite CCs - High Limit" },
-            { name: "Iran", flag: "🇮🇷", description: "Fresh CCs - Fast Delivery" },
-            { name: "Iraq", flag: "🇮🇶", description: "Premium CCs - Trusted" },
-            { name: "Syria", flag: "🇸🇾", description: "Cheap CCs - Bulk Offers" },
-            { name: "Lebanon", flag: "🇱🇧", description: "Verified CCs - Secure" },
-            { name: "Jordan", flag: "🇯🇴", description: "Elite CCs - High Balance" },
-            { name: "Israel", flag: "🇮🇱", description: "Fresh CCs - Low Risk" },
-            { name: "Palestine", flag: "🇵🇸", description: "Premium CCs - Trusted" },
-            { name: "Saudi Arabia", flag: "🇸🇦", description: "Cheap CCs - Bulk Deals" },
-            { name: "UAE", flag: "🇦🇪", description: "Verified CCs - Secure" },
-            { name: "Qatar", flag: "🇶🇦", description: "Elite CCs - High Limit" },
-            { name: "Kuwait", flag: "🇰🇼", description: "Fresh CCs - Fast Delivery" },
-            { name: "Bahrain", flag: "🇧🇭", description: "Premium CCs - Trusted" },
-            { name: "Oman", flag: "🇴🇲", description: "Cheap CCs - Bulk Offers" },
-            { name: "Yemen", flag: "🇾🇪", description: "Verified CCs - Secure" },
-            { name: "Algeria", flag: "🇩🇿", description: "Elite CCs - High Balance" },
-            { name: "Morocco", flag: "🇲🇦", description: "Fresh CCs - Low Risk" },
-            { name: "Tunisia", flag: "🇹🇳", description: "Premium CCs - Trusted" },
-            { name: "Libya", flag: "🇱🇾", description: "Cheap CCs - Bulk Deals" },
-            { name: "Sudan", flag: "🇸🇩", description: "Verified CCs - Secure" },
-            { name: "South Sudan", flag: "🇸🇸", description: "Elite CCs - High Limit" },
-            { name: "Ethiopia", flag: "🇪🇹", description: "Fresh CCs - Fast Delivery" },
-            { name: "Kenya", flag: "🇰🇪", description: "Premium CCs - Trusted" },
-            { name: "Tanzania", flag: "🇹🇿", description: "Cheap CCs - Bulk Offers" },
-            { name: "Uganda", flag: "🇺🇬", description: "Verified CCs - Secure" },
-            { name: "Rwanda", flag: "🇷🇼", description: "Elite CCs - High Balance" },
-            { name: "Ghana", flag: "🇬🇭", description: "Fresh CCs - Low Risk" },
-            { name: "Nigeria", flag: "🇳🇬", description: "Premium CCs - Trusted" },
-            { name: "Cameroon", flag: "🇨🇲", description: "Cheap CCs - Bulk Deals" },
-            { name: "Zimbabwe", flag: "🇿🇼", description: "Verified CCs - Secure" },
-            { name: "Zambia", flag: "🇿🇲", description: "Elite CCs - High Limit" },
-            { name: "Malawi", flag: "🇲🇼", description: "Fresh CCs - Fast Delivery" },
-            { name: "Mozambique", flag: "🇲🇿", description: "Premium CCs - Trusted" },
-            { name: "Madagascar", flag: "🇲🇬", description: "Cheap CCs - Bulk Offers" },
-            { name: "Botswana", flag: "🇧🇼", description: "Verified CCs - Secure" },
-            { name: "Namibia", flag: "🇳🇦", description: "Elite CCs - High Balance" },
-            { name: "Angola", flag: "🇦🇴", description: "Fresh CCs - Low Risk" },
-            { name: "Chad", flag: "🇹🇩", description: "Premium CCs - Trusted" },
-            { name: "Niger", flag: "🇳🇪", description: "Cheap CCs - Bulk Deals" },
-            { name: "Mali", flag: "🇲🇱", description: "Verified CCs - Secure" },
-            { name: "Burkina Faso", flag: "🇧🇫", description: "Elite CCs - High Limit" },
-            { name: "Ivory Coast", flag: "🇨🇮", description: "Fresh CCs - Fast Delivery" },
-            { name: "Senegal", flag: "🇸🇳", description: "Premium CCs - Trusted" },
-            { name: "Guinea", flag: "🇬🇳", description: "Cheap CCs - Bulk Offers" },
-            { name: "Sierra Leone", flag: "🇸🇱", description: "Verified CCs - Secure" },
-            { name: "Liberia", flag: "🇱🇷", description: "Elite CCs - High Balance" },
-            { name: "Togo", flag: "🇹🇬", description: "Fresh CCs - Low Risk" },
-            { name: "Benin", flag: "🇧🇯", description: "Premium CCs - Trusted" },
-            { name: "Gabon", flag: "🇬🇦", description: "Cheap CCs - Bulk Deals" },
-            { name: "Congo", flag: "🇨🇬", description: "Verified CCs - Secure" },
-            { name: "DR Congo", flag: "🇨🇩", description: "Elite CCs - High Limit" },
-            { name: "Equatorial Guinea", flag: "🇬🇶", description: "Fresh CCs - Fast Delivery" },
-            { name: "Central African Republic", flag: "🇨🇫", description: "Premium CCs - Trusted" },
-            { name: "Eritrea", flag: "🇪🇷", description: "Cheap CCs - Bulk Offers" },
-            { name: "Djibouti", flag: "🇩🇯", description: "Verified CCs - Secure" },
-            { name: "Somalia", flag: "🇸🇴", description: "Elite CCs - High Balance" },
-            { name: "Mauritania", flag: "🇲🇷", description: "Fresh CCs - Low Risk" },
-            { name: "Western Sahara", flag: "🇪🇭", description: "Premium CCs - Trusted" },
-            { name: "Gambia", flag: "🇬🇲", description: "Cheap CCs - Bulk Deals" },
-            { name: "Cape Verde", flag: "🇨🇻", description: "Verified CCs - Secure" },
-            { name: "Sao Tome", flag: "🇸🇹", description: "Elite CCs - High Limit" },
-            { name: "Seychelles", flag: "🇸🇨", description: "Fresh CCs - Fast Delivery" },
-            { name: "Comoros", flag: "🇰🇲", description: "Premium CCs - Trusted" },
-            { name: "Mauritius", flag: "🇲🇺", description: "Cheap CCs - Bulk Offers" },
-            { name: "Antigua", flag: "🇦🇬", description: "Verified CCs - Secure" },
-            { name: "Bahamas", flag: "🇧🇸", description: "Elite CCs - High Balance" },
-            { name: "Barbados", flag: "🇧🇧", description: "Fresh CCs - Low Risk" },
-            { name: "Belize", flag: "🇧🇿", description: "Premium CCs - Trusted" },
-            { name: "Costa Rica", flag: "🇨🇷", description: "Cheap CCs - Bulk Deals" },
-            { name: "Cuba", flag: "🇨🇺", description: "Verified CCs - Secure" },
-            { name: "Dominica", flag: "🇩🇲", description: "Elite CCs - High Limit" },
-            { name: "Dominican Republic", flag: "🇩🇴", description: "Fresh CCs - Fast Delivery" },
-            { name: "El Salvador", flag: "🇸🇻", description: "Premium CCs - Trusted" },
-            { name: "Grenada", flag: "🇬🇩", description: "Cheap CCs - Bulk Offers" },
-            { name: "Guatemala", flag: "🇬🇹", description: "Verified CCs - Secure" },
-            { name: "Haiti", flag: "🇭🇹", description: "Elite CCs - High Balance" },
-            { name: "Honduras", flag: "🇭🇳", description: "Fresh CCs - Low Risk" },
-            { name: "Jamaica", flag: "🇯🇲", description: "Premium CCs - Trusted" },
-            { name: "Nicaragua", flag: "🇳🇮", description: "Cheap CCs - Bulk Deals" },
-            { name: "Panama", flag: "🇵🇦", description: "Verified CCs - Secure" },
-            { name: "Saint Lucia", flag: "🇱🇨", description: "Elite CCs - High Limit" },
-            { name: "Saint Vincent", flag: "🇻🇨", description: "Fresh CCs - Fast Delivery" },
-            { name: "Trinidad", flag: "🇹🇹", description: "Premium CCs - Trusted" },
-            { name: "Fiji", flag: "🇫🇯", description: "Cheap CCs - Bulk Offers" },
-            { name: "Samoa", flag: "🇼🇸", description: "Verified CCs - Secure" },
-            { name: "Tonga", flag: "🇹🇴", description: "Elite CCs - High Balance" },
-            { name: "Vanuatu", flag: "🇻🇺", description: "Fresh CCs - Low Risk" },
-            { name: "Solomon Islands", flag: "🇸🇧", description: "Premium CCs - Trusted" },
-            { name: "Papua New Guinea", flag: "🇵🇬", description: "Cheap CCs - Bulk Deals" },
-            { name: "Micronesia", flag: "🇫🇲", description: "Verified CCs - Secure" },
-            { name: "Marshall Islands", flag: "🇲🇭", description: "Elite CCs - High Limit" },
-            { name: "Kiribati", flag: "🇰🇮", description: "Fresh CCs - Fast Delivery" },
-            { name: "Tuvalu", flag: "🇹🇻", description: "Premium CCs - Trusted" },
-            { name: "Nauru", flag: "🇳🇷", description: "Cheap CCs - Bulk Offers" },
-            { name: "Palau", flag: "🇵🇼", description: "Verified CCs - Secure" }
+            { name: "USA", flag: "🇺🇸", category: "Premium CCs", rate: "$80", stock: "10 in stock", lastSold: "2 mins ago", warranty: "100% Validated" },
+            { name: "UK", flag: "🇬🇧", category: "Premium CCs", rate: "$85", stock: "8 in stock", lastSold: "3 mins ago", warranty: "100% Validated" },
+            { name: "Germany", flag: "🇩🇪", category: "High Limit", rate: "$90", stock: "5 in stock", lastSold: "5 mins ago", warranty: "100% Validated" },
+            { name: "France", flag: "🇫🇷", category: "Premium CCs", rate: "$82", stock: "9 in stock", lastSold: "4 mins ago", warranty: "100% Validated" },
+            { name: "Canada", flag: "🇨🇦", category: "High Limit", rate: "$95", stock: "4 in stock", lastSold: "6 mins ago", warranty: "100% Validated" },
+            { name: "Australia", flag: "🇦🇺", category: "Bulk Deals", rate: "$60", stock: "40 in stock", lastSold: "7 mins ago", risk: "Medium Risk" },
+            { name: "Japan", flag: "🇯🇵", category: "Bulk Deals", rate: "$65", stock: "35 in stock", lastSold: "8 mins ago", risk: "Medium Risk" },
+            { name: "South Korea", flag: "🇰🇷", category: "Low Risk", rate: "$70", stock: "15 in stock", lastSold: "10 mins ago", risk: "Low Risk" },
+            { name: "Italy", flag: "🇮🇹", category: "Premium CCs", rate: "$88", stock: "7 in stock", lastSold: "9 mins ago", warranty: "100% Validated" },
+            { name: "Spain", flag: "🇪🇸", category: "High Limit", rate: "$92", stock: "6 in stock", lastSold: "11 mins ago", warranty: "100% Validated" },
+            { name: "Switzerland", flag: "🇨🇭", category: "Premium CCs", rate: "$90", stock: "5 in stock", lastSold: "12 mins ago", warranty: "100% Validated" },
+            { name: "Netherlands", flag: "🇳🇱", category: "Bulk Deals", rate: "$62", stock: "30 in stock", lastSold: "13 mins ago", risk: "Medium Risk" },
+            { name: "Sweden", flag: "🇸🇪", category: "Low Risk", rate: "$68", stock: "20 in stock", lastSold: "14 mins ago", risk: "Low Risk" },
+            { name: "Norway", flag: "🇳🇴", category: "High Limit", rate: "$94", stock: "4 in stock", lastSold: "15 mins ago", warranty: "100% Validated" },
+            { name: "Denmark", flag: "🇩🇰", category: "Premium CCs", rate: "$87", stock: "8 in stock", lastSold: "16 mins ago", warranty: "100% Validated" },
+            { name: "Finland", flag: "🇫🇮", category: "Bulk Deals", rate: "$64", stock: "25 in stock", lastSold: "17 mins ago", risk: "Medium Risk" },
+            { name: "Ireland", flag: "🇮🇪", category: "Low Risk", rate: "$66", stock: "18 in stock", lastSold: "18 mins ago", risk: "Low Risk" },
+            { name: "Belgium", flag: "🇧🇪", category: "High Limit", rate: "$93", stock: "5 in stock", lastSold: "19 mins ago", warranty: "100% Validated" },
+            { name: "Austria", flag: "🇦🇹", category: "Premium CCs", rate: "$86", stock: "9 in stock", lastSold: "20 mins ago", warranty: "100% Validated" },
+            { name: "Singapore", flag: "🇸🇬", category: "Bulk Deals", rate: "$61", stock: "35 in stock", lastSold: "21 mins ago", risk: "Medium Risk" },
+            { name: "New Zealand", flag: "🇳🇿", category: "Low Risk", rate: "$69", stock: "15 in stock", lastSold: "22 mins ago", risk: "Low Risk" },
+            { name: "UAE", flag: "🇦🇪", category: "High Limit", rate: "$91", stock: "6 in stock", lastSold: "23 mins ago", warranty: "100% Validated" },
+            { name: "Saudi Arabia", flag: "🇸🇦", category: "Premium CCs", rate: "$89", stock: "7 in stock", lastSold: "24 mins ago", warranty: "100% Validated" },
+            { name: "Qatar", flag: "🇶🇦", category: "Bulk Deals", rate: "$63", stock: "30 in stock", lastSold: "25 mins ago", risk: "Medium Risk" },
+            { name: "Israel", flag: "🇮🇱", category: "Low Risk", rate: "$67", stock: "20 in stock", lastSold: "26 mins ago", risk: "Low Risk" }
         ];
 
         // Load saved username and password from LocalStorage
@@ -624,7 +608,10 @@
                 document.getElementById("loading").style.display = "none";
                 document.getElementById("loginContainer").style.display = "block";
                 document.getElementById("cartContainer").style.display = "block";
-                document.getElementById("cardsContainer").style.display = "grid";
+                document.getElementById("premiumCCs").style.display = "block";
+                document.getElementById("bulkDeals").style.display = "block";
+                document.getElementById("highLimit").style.display = "block";
+                document.getElementById("lowRisk").style.display = "block";
             }, 2000);
 
             // Check if username and password are saved in LocalStorage
@@ -638,16 +625,34 @@
                 document.getElementById("password").value = savedPassword;
             }
 
-            // Dynamically add cards
-            const cardsContainer = document.getElementById("cardsContainer");
+            // Dynamically add cards to respective categories
+            const premiumCards = document.getElementById("premiumCards");
+            const bulkCards = document.getElementById("bulkCards");
+            const highLimitCards = document.getElementById("highLimitCards");
+            const lowRiskCards = document.getElementById("lowRiskCards");
+
             countries.forEach(country => {
                 const card = document.createElement("div");
                 card.className = "card";
                 card.innerHTML = `
                     <h3>${country.flag} ${country.name}</h3>
-                    <p>${country.description}</p>
+                    <p>${country.category}</p>
+                    <p class="rate">${country.rate}</p>
+                    <p class="stock">${country.stock}</p>
+                    <p>Last Sold: ${country.lastSold}</p>
+                    ${country.risk ? `<p class="risk">${country.risk}</p>` : ''}
+                    ${country.warranty ? `<p class="warranty">${country.warranty}</p>` : ''}
                 `;
-                cardsContainer.appendChild(card);
+
+                if (country.category === "Premium CCs") {
+                    premiumCards.appendChild(card);
+                } else if (country.category === "Bulk Deals") {
+                    bulkCards.appendChild(card);
+                } else if (country.category === "High Limit") {
+                    highLimitCards.appendChild(card);
+                } else if (country.category === "Low Risk") {
+                    lowRiskCards.appendChild(card);
+                }
             });
         };
 
@@ -677,6 +682,12 @@
         // Remove item from cart
         function removeFromCart(button) {
             button.parentElement.remove();
+        }
+
+        // Checkout with BTC
+        function checkoutWithBTC() {
+            const btcAddress = "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"; // Tumhara BTC address daal diya
+            alert(`Please send payment to the following BTC address: ${btcAddress}\n\nAfter payment, your order will be processed.`);
         }
     </script>
 </body>
