@@ -1,399 +1,212 @@
-// Get all sections
-const registerSection = document.getElementById("registerSection");
-const loginSection = document.getElementById("loginSection");
-const productsSection = document.getElementById("productsSection");
-const waitingSection = document.getElementById("waitingSection");
-const thankYouSection = document.getElementById("thankYouSection");
-const qrPopup = document.getElementById("qrPopup");
-const purchasedCardsList = document.getElementById("purchasedCardsList");
-const messageContent = document.getElementById("messageContent");
-
-// Check user state on page load
-let loggedInUser = localStorage.getItem("loggedInUser");
-let orders = JSON.parse(localStorage.getItem("orders")) || [];
-const waitingTime = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
-const failTime = 1 * 60 * 60 * 1000; // 1 hour in milliseconds
-
-// Default user data (hardcoded for persistence)
-const defaultUsers = [
-    { username: "lalotra123", password: "pass123" }
+// List of 100+ cards with premium countries, Visa, MasterCard, and American Express
+const cards = [
+    { id: 1, flag: "🇺🇸", country: "USA", number: "522446", type: "CREDIT", brand: "MasterCard", level: "ELECTRONIC", expiry: "XX/23", valid: true, price: "$80", warranty: "100% Validated" },
+    { id: 2, flag: "🇺🇸", country: "USA", number: "554900", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/26", valid: false, price: "$85", warranty: "100% Validated" },
+    { id: 3, flag: "🇬🇧", country: "UK", number: "400570", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 4, flag: "🇬🇧", country: "UK", number: "400570", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 5, flag: "🇩🇪", country: "Germany", number: "506775", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/24", valid: false, price: "$90", warranty: "100% Validated" },
+    { id: 6, flag: "🇩🇪", country: "Germany", number: "430675", type: "CREDIT", brand: "Visa", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 7, flag: "🇫🇷", country: "France", number: "550209", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/28", valid: true, price: "$66", risk: "Low Risk" },
+    { id: 8, flag: "🇫🇷", country: "France", number: "546325", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: true, price: "$68", risk: "Low Risk" },
+    { id: 9, flag: "🇨🇦", country: "Canada", number: "491675", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/27", valid: false, price: "$88", warranty: "100% Validated" },
+    { id: 10, flag: "🇨🇦", country: "Canada", number: "400881", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/25", valid: false, price: "$64", risk: "Medium Risk" },
+    { id: 11, flag: "🇦🇺", country: "Australia", number: "833120", type: "UNKNOWN", brand: "Unknown", level: "N/A", expiry: "XX/24", valid: false, price: "$94", warranty: "100% Validated" },
+    { id: 12, flag: "🇦🇺", country: "Australia", number: "483042", type: "CREDIT", brand: "Visa", level: "PLATINUM", expiry: "XX/24", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 13, flag: "🇺🇸", country: "USA", number: "374622", type: "CREDIT", brand: "American Express", level: "PLATINUM", expiry: "XX/25", valid: true, price: "$95", warranty: "100% Validated" },
+    { id: 14, flag: "🇺🇸", country: "USA", number: "374623", type: "CREDIT", brand: "American Express", level: "GOLD", expiry: "XX/24", valid: false, price: "$90", warranty: "100% Validated" },
+    { id: 15, flag: "🇯🇵", country: "Japan", number: "453201", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$65", risk: "Medium Risk" },
+    { id: 16, flag: "🇯🇵", country: "Japan", number: "527890", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 17, flag: "🇰🇷", country: "South Korea", number: "491672", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/25", valid: true, price: "$85", warranty: "100% Validated" },
+    { id: 18, flag: "🇰🇷", country: "South Korea", number: "527891", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/24", valid: false, price: "$60", risk: "Medium Risk" },
+    { id: 19, flag: "🇮🇹", country: "Italy", number: "453202", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/23", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 20, flag: "🇮🇹", country: "Italy", number: "527892", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/26", valid: false, price: "$90", warranty: "100% Validated" },
+    { id: 21, flag: "🇪🇸", country: "Spain", number: "453203", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 22, flag: "🇪🇸", country: "Spain", number: "527893", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 23, flag: "🇨🇭", country: "Switzerland", number: "453204", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/26", valid: true, price: "$88", warranty: "100% Validated" },
+    { id: 24, flag: "🇨🇭", country: "Switzerland", number: "527894", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 25, flag: "🇳🇱", country: "Netherlands", number: "453205", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 26, flag: "🇳🇱", country: "Netherlands", number: "527895", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 27, flag: "🇸🇪", country: "Sweden", number: "453206", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 28, flag: "🇸🇪", country: "Sweden", number: "527896", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$66", risk: "Low Risk" },
+    { id: 29, flag: "🇳🇴", country: "Norway", number: "453207", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/24", valid: true, price: "$90", warranty: "100% Validated" },
+    { id: 30, flag: "🇳🇴", country: "Norway", number: "527897", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 31, flag: "🇩🇰", country: "Denmark", number: "453208", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 32, flag: "🇩🇰", country: "Denmark", number: "527898", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/27", valid: false, price: "$94", warranty: "100% Validated" },
+    { id: 33, flag: "🇫🇮", country: "Finland", number: "453209", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 34, flag: "🇫🇮", country: "Finland", number: "527899", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$66", risk: "Low Risk" },
+    { id: 35, flag: "🇮🇪", country: "Ireland", number: "453210", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/26", valid: true, price: "$88", warranty: "100% Validated" },
+    { id: 36, flag: "🇮🇪", country: "Ireland", number: "527900", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 37, flag: "🇧🇪", country: "Belgium", number: "453211", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 38, flag: "🇧🇪", country: "Belgium", number: "527901", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 39, flag: "🇦🇹", country: "Austria", number: "453212", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 40, flag: "🇦🇹", country: "Austria", number: "527902", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 41, flag: "🇸🇬", country: "Singapore", number: "453213", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/24", valid: true, price: "$90", warranty: "100% Validated" },
+    { id: 42, flag: "🇸🇬", country: "Singapore", number: "527903", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 43, flag: "🇳🇿", country: "New Zealand", number: "453214", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 44, flag: "🇳🇿", country: "New Zealand", number: "527904", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/27", valid: false, price: "$94", warranty: "100% Validated" },
+    { id: 45, flag: "🇦🇪", country: "UAE", number: "453215", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 46, flag: "🇦🇪", country: "UAE", number: "527905", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$66", risk: "Low Risk" },
+    { id: 47, flag: "🇸🇦", country: "Saudi Arabia", number: "453216", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/26", valid: true, price: "$88", warranty: "100% Validated" },
+    { id: 48, flag: "🇸🇦", country: "Saudi Arabia", number: "527906", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 49, flag: "🇶🇦", country: "Qatar", number: "453217", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 50, flag: "🇶🇦", country: "Qatar", number: "527907", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 51, flag: "🇮🇱", country: "Israel", number: "453218", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 52, flag: "🇮🇱", country: "Israel", number: "527908", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 53, flag: "🇺🇸", country: "USA", number: "374624", type: "CREDIT", brand: "American Express", level: "PLATINUM", expiry: "XX/25", valid: true, price: "$95", warranty: "100% Validated" },
+    { id: 54, flag: "🇺🇸", country: "USA", number: "374625", type: "CREDIT", brand: "American Express", level: "GOLD", expiry: "XX/24", valid: false, price: "$90", warranty: "100% Validated" },
+    { id: 55, flag: "🇬🇧", country: "UK", number: "453219", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$65", risk: "Medium Risk" },
+    { id: 56, flag: "🇬🇧", country: "UK", number: "527909", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 57, flag: "🇩🇪", country: "Germany", number: "453220", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/25", valid: true, price: "$85", warranty: "100% Validated" },
+    { id: 58, flag: "🇩🇪", country: "Germany", number: "527910", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/24", valid: false, price: "$60", risk: "Medium Risk" },
+    { id: 59, flag: "🇫🇷", country: "France", number: "453221", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/23", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 60, flag: "🇫🇷", country: "France", number: "527911", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/26", valid: false, price: "$90", warranty: "100% Validated" },
+    { id: 61, flag: "🇨🇦", country: "Canada", number: "453222", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 62, flag: "🇨🇦", country: "Canada", number: "527912", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 63, flag: "🇦🇺", country: "Australia", number: "453223", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/26", valid: true, price: "$88", warranty: "100% Validated" },
+    { id: 64, flag: "🇦🇺", country: "Australia", number: "527913", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 65, flag: "🇯🇵", country: "Japan", number: "453224", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 66, flag: "🇯🇵", country: "Japan", number: "527914", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 67, flag: "🇰🇷", country: "South Korea", number: "453225", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 68, flag: "🇰🇷", country: "South Korea", number: "527915", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$66", risk: "Low Risk" },
+    { id: 69, flag: "🇮🇹", country: "Italy", number: "453226", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/24", valid: true, price: "$90", warranty: "100% Validated" },
+    { id: 70, flag: "🇮🇹", country: "Italy", number: "527916", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 71, flag: "🇪🇸", country: "Spain", number: "453227", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 72, flag: "🇪🇸", country: "Spain", number: "527917", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/27", valid: false, price: "$94", warranty: "100% Validated" },
+    { id: 73, flag: "🇨🇭", country: "Switzerland", number: "453228", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 74, flag: "🇨🇭", country: "Switzerland", number: "527918", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$66", risk: "Low Risk" },
+    { id: 75, flag: "🇳🇱", country: "Netherlands", number: "453229", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/26", valid: true, price: "$88", warranty: "100% Validated" },
+    { id: 76, flag: "🇳🇱", country: "Netherlands", number: "527919", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 77, flag: "🇸🇪", country: "Sweden", number: "453230", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 78, flag: "🇸🇪", country: "Sweden", number: "527920", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 79, flag: "🇳🇴", country: "Norway", number: "453231", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 80, flag: "🇳🇴", country: "Norway", number: "527921", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 81, flag: "🇩🇰", country: "Denmark", number: "453232", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/24", valid: true, price: "$90", warranty: "100% Validated" },
+    { id: 82, flag: "🇩🇰", country: "Denmark", number: "527922", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 83, flag: "🇫🇮", country: "Finland", number: "453233", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 84, flag: "🇫🇮", country: "Finland", number: "527923", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/27", valid: false, price: "$94", warranty: "100% Validated" },
+    { id: 85, flag: "🇮🇪", country: "Ireland", number: "453234", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 86, flag: "🇮🇪", country: "Ireland", number: "527924", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$66", risk: "Low Risk" },
+    { id: 87, flag: "🇧🇪", country: "Belgium", number: "453235", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/26", valid: true, price: "$88", warranty: "100% Validated" },
+    { id: 88, flag: "🇧🇪", country: "Belgium", number: "527925", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 89, flag: "🇦🇹", country: "Austria", number: "453236", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 90, flag: "🇦🇹", country: "Austria", number: "527926", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 91, flag: "🇸🇬", country: "Singapore", number: "453237", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$64", risk: "Medium Risk" },
+    { id: 92, flag: "🇸🇬", country: "Singapore", number: "527927", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$68", risk: "Low Risk" },
+    { id: 93, flag: "🇳🇿", country: "New Zealand", number: "453238", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/24", valid: true, price: "$90", warranty: "100% Validated" },
+    { id: 94, flag: "🇳🇿", country: "New Zealand", number: "527928", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 95, flag: "🇦🇪", country: "UAE", number: "453239", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 96, flag: "🇦🇪", country: "UAE", number: "527929", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/27", valid: false, price: "$94", warranty: "100% Validated" },
+    { id: 97, flag: "🇸🇦", country: "Saudi Arabia", number: "453240", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
+    { id: 98, flag: "🇸🇦", country: "Saudi Arabia", number: "527930", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: false, price: "$66", risk: "Low Risk" },
+    { id: 99, flag: "🇶🇦", country: "Qatar", number: "453241", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/26", valid: true, price: "$88", warranty: "100% Validated" },
+    { id: 100, flag: "🇶🇦", country: "Qatar", number: "527931", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" },
+    { id: 101, flag: "🇮🇱", country: "Israel", number: "453242", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+    { id: 102, flag: "🇮🇱", country: "Israel", number: "527932", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+    { id: 103, flag: "🇺🇸", country: "USA", number: "374626", type: "CREDIT", brand: "American Express", level: "PLATINUM", expiry: "XX/25", valid: true, price: "$95", warranty: "100% Validated" },
+    { id: 104, flag: "🇺🇸", country: "USA", number: "374627", type: "CREDIT", brand: "American Express", level: "GOLD", expiry: "XX/24", valid: false, price: "$90", warranty: "100% Validated" },
+    { id: 105, flag: "🇬🇧", country: "UK", number: "453243", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/26", valid: true, price: "$65", risk: "Medium Risk" },
+    { id: 106, flag: "🇬🇧", country: "UK", number: "527933", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/27", valid: false, price: "$70", risk: "Low Risk" }
 ];
 
-// Initialize users from localStorage or use default users
-let users = [];
-const storedUsers = localStorage.getItem("users");
-if (storedUsers) {
-    users = JSON.parse(storedUsers);
-} else {
-    // If no users in localStorage, use default users
-    users = defaultUsers;
-    localStorage.setItem("users", JSON.stringify(users));
-}
+// Load saved username and password from LocalStorage
+window.onload = function() {
+    setTimeout(function() {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("loginContainer").style.display = "block";
+    }, 2000);
 
-// Initial state
-if (!loggedInUser) {
-    showRegister(); // Show register section by default
-} else {
-    showProducts();
-    displayPurchasedCards();
-    checkAllOrders();
-}
+    // Check if username and password are saved in LocalStorage
+    const savedUsername = localStorage.getItem("username");
+    const savedPassword = localStorage.getItem("password");
 
-// Show register section
-function showRegister() {
-    registerSection.style.display = "block";
-    loginSection.style.display = "none";
-    productsSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
-}
-
-// Show login section
-function showLogin() {
-    registerSection.style.display = "none";
-    loginSection.style.display = "block";
-    productsSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
-}
-
-// Register function
-function register() {
-    const username = document.getElementById("registerUsername").value;
-    const password = document.getElementById("registerPassword").value;
-    const errorMessage = document.getElementById("registerErrorMessage");
-
-    // Check if username or password is empty
-    if (!username || !password) {
-        errorMessage.innerText = "Please fill in all fields!";
-        errorMessage.style.display = "block";
-        return;
+    if (savedUsername) {
+        document.getElementById("username").value = savedUsername;
+    }
+    if (savedPassword) {
+        document.getId("password").value = savedPassword;
     }
 
-    try {
-        // Get existing users from localStorage
-        let users = [];
-        const storedUsers = localStorage.getItem("users");
-        if (storedUsers) {
-            users = JSON.parse(storedUsers);
-        } else {
-            users = defaultUsers; // Use default users if localStorage is empty
-        }
+    // Load all cards
+    const cardsTableBody = document.getElementById("cardsTableBody");
+    cards.forEach(card => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${card.flag}</td>
+            <td>${card.country}</td>
+            <td>${card.number}</td>
+            <td class="card-type">
+                ${card.brand === "Visa" ? '<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">' : 
+                card.brand === "MasterCard" ? '<img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard">' : 
+                card.brand === "American Express" ? '<img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg" alt="American Express">' : 
+                '<img src="https://via.placeholder.com/20" alt="Unknown">'} 
+                ${card.type}
+            </td>
+            <td>${card.level}</td>
+            <td>${card.expiry}</td>
+            <td class="${card.valid ? 'valid' : 'invalid'}">${card.valid ? '✔️' : '❌'}</td>
+            <td>${card.price} ${card.risk ? `(${card.risk})` : card.warranty ? `(${card.warranty})` : ''}</td>
+            <td><button class="buy-now-btn" onclick="buyNow(${card.id})">Buy Now</button></td>
+        `;
+        cardsTableBody.appendChild(row);
+    });
+};
 
-        // Check if username already exists
-        const userExists = users.some(user => user.username === username);
-        if (userExists) {
-            errorMessage.innerText = "Username already exists!";
-            errorMessage.style.display = "block";
-            return;
-        }
+// Save username and password to LocalStorage on form submit
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-        // Add new user to the list
-        users.push({ username, password });
-        localStorage.setItem("users", JSON.stringify(users));
-
-        // Clear form and show login section
-        document.getElementById("registerUsername").value = "";
-        document.getElementById("registerPassword").value = "";
-        errorMessage.style.display = "none";
-        alert("Registration successful! Please login.");
-        showLogin();
-    } catch (e) {
-        console.error("Error saving user to localStorage:", e);
-        errorMessage.innerText = "Failed to register. Please try again.";
-        errorMessage.style.display = "block";
-    }
-}
-
-// Login function
-function login() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-    const errorMessage = document.getElementById("errorMessage");
 
-    try {
-        // Get users from localStorage
-        let users = [];
-        const storedUsers = localStorage.getItem("users");
-        if (storedUsers) {
-            users = JSON.parse(storedUsers);
-        } else {
-            users = defaultUsers; // Use default users if localStorage is empty
-            localStorage.setItem("users", JSON.stringify(users));
-        }
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
 
-        // Check if credentials match
-        const user = users.find(user => user.username === username && user.password === password);
-        if (user) {
-            localStorage.setItem("loggedInUser", username);
-            loggedInUser = username;
-            loginSection.style.display = "none";
-            showProducts();
-            displayPurchasedCards();
-            checkAllOrders();
-        } else {
-            errorMessage.style.display = "block";
-        }
-    } catch (e) {
-        console.error("Error retrieving users from localStorage:", e);
-        errorMessage.innerText = "Failed to login. Please try again.";
-        errorMessage.style.display = "block";
+    alert("Access Granted! Credentials saved.");
+    document.getElementById("loginContainer").style.display = "none";
+    document.getElementById("cardsTableSection").style.display = "block";
+    document.getElementById("supportSection").style.display = "block";
+});
+
+// Toggle Password Visibility
+function togglePassword() {
+    var passwordField = document.getElementById("password");
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+    } else {
+        passwordField.type = "password";
     }
 }
 
-// Show products section
-function showProducts() {
-    productsSection.style.display = "block";
-    registerSection.style.display = "none";
-    loginSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
-    document.getElementById("welcomeMessage").innerText = `Welcome, ${loggedInUser}!`;
+// Buy Now
+function buyNow(cardId) {
+    const paymentPopup = document.getElementById("paymentPopup");
+    paymentPopup.style.display = "flex";
 }
 
-// Logout function
-function logout() {
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("orders");
-    loggedInUser = null;
-    orders = [];
-    productsSection.style.display = "none";
-    waitingSection.style.display = "none";
-    thankYouSection.style.display = "none";
-    showLogin();
-    document.getElementById("username").value = "";
-    document.getElementById("password").value = "";
-    document.getElementById("errorMessage").style.display = "none";
+// Close payment popup
+function closePaymentPopup() {
+    const paymentPopup = document.getElementById("paymentPopup");
+    paymentPopup.style.display = "none";
 }
 
-// Buy functionality
-function buyCard(cardName, amount) {
-    qrPopup.style.display = "block";
-    document.getElementById("cardName").innerText = cardName;
-    document.getElementById("amountToPay").innerText = amount;
+// Open Chat Login Popup
+function openChatLogin() {
+    const chatLoginPopup = document.getElementById("chatLoginPopup");
+    chatLoginPopup.style.display = "flex";
+    setTimeout(() => {
+        chatLoginPopup.style.display = "none";
+    }, 3000);
 }
 
-// Close popup
-function closePopup() {
-    qrPopup.style.display = "none";
+// Open Message Login Popup
+function openMessageLogin() {
+    const messageLoginPopup = document.getElementById("messageLoginPopup");
+    messageLoginPopup.style.display = "flex";
 }
 
-// Copy deposit address to clipboard
-function copyAddress() {
-    const depositAddress = document.getElementById("depositAddress").innerText.trim(); // Trim to remove extra spaces
-    navigator.clipboard.writeText(depositAddress).then(() => {
-        alert("Deposit address copied to clipboard!");
-    }).catch(err => {
-        alert("Failed to copy address: " + err);
-    });
-}
-
-// Confirm payment and start waiting time
-function confirmPayment() {
-    const cardName = document.getElementById("cardName").innerText;
-    const amount = document.getElementById("amountToPay").innerText;
-    
-    // Set new timestamp and initial payment status
-    const currentTime = Date.now();
-    const newOrder = {
-        cardName: cardName,
-        amount: amount,
-        timestamp: currentTime,
-        status: "Pending"
-    };
-    
-    // Add to orders
-    orders.push(newOrder);
-    localStorage.setItem("orders", JSON.stringify(orders));
-    
-    // Close popup and show waiting section
-    closePopup();
-    productsSection.style.display = "none";
-    waitingSection.style.display = "block";
-    thankYouSection.style.display = "none";
-    
-    // Start the timer for this order
-    startTimer(newOrder);
-}
-
-// Check all orders and handle timers
-function checkAllOrders() {
-    orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.forEach(order => {
-        const currentTime = Date.now();
-        const timeElapsed = currentTime - order.timestamp;
-
-        // Check if payment should fail after 1 hour
-        if (timeElapsed >= failTime && order.status === "Pending") {
-            order.status = "Failed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-        }
-
-        // Check if order is complete after 6 hours
-        if (timeElapsed >= waitingTime && order.status !== "Failed") {
-            order.status = "Confirmed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-        }
-
-        // Update purchased cards list
-        displayPurchasedCards();
-    });
-}
-
-// Start the timer to show remaining time in waiting section
-function startTimer(order) {
-    const timerElement = document.getElementById("timer");
-    const paymentStatusElement = document.getElementById("paymentStatus");
-
-    const interval = setInterval(() => {
-        const currentTime = Date.now();
-        const timeElapsed = currentTime - order.timestamp;
-        const timeRemaining = waitingTime - timeElapsed;
-
-        // Update payment status
-        if (timeElapsed >= failTime && order.status === "Pending") {
-            order.status = "Failed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-            displayPurchasedCards();
-            clearInterval(interval);
-            showProducts();
-            return;
-        }
-
-        if (timeElapsed >= waitingTime) {
-            order.status = "Confirmed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-            displayPurchasedCards();
-            clearInterval(interval);
-            productsSection.style.display = "none";
-            waitingSection.style.display = "none";
-            thankYouSection.style.display = "block";
-            return;
-        }
-
-        // Update timer and status display
-        paymentStatusElement.innerText = order.status;
-        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-        timerElement.innerText = `${hours}h ${minutes}m ${seconds}s`;
-
-        // Keep checking all orders in background
-        checkAllOrders();
-    }, 1000);
-}
-
-// Start timer for a specific card in Purchased Cards section
-function startCardTimer(order, timerElement) {
-    const interval = setInterval(() => {
-        const currentTime = Date.now();
-        const timeElapsed = currentTime - order.timestamp;
-        const timeRemaining = waitingTime - timeElapsed;
-
-        if (timeElapsed >= failTime && order.status === "Pending") {
-            order.status = "Failed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-            displayPurchasedCards();
-            clearInterval(interval);
-            return;
-        }
-
-        if (timeElapsed >= waitingTime) {
-            order.status = "Confirmed";
-            localStorage.setItem("orders", JSON.stringify(orders));
-            displayPurchasedCards();
-            clearInterval(interval);
-            return;
-        }
-
-        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-        timerElement.innerText = `${hours}h ${minutes}m ${seconds}s`;
-    }, 1000);
-}
-
-// Display purchased cards
-function displayPurchasedCards() {
-    orders = JSON.parse(localStorage.getItem("orders")) || [];
-    purchasedCardsList.innerHTML = "";
-    orders.forEach(order => {
-        // Create card item
-        const cardItem = document.createElement("div");
-        cardItem.classList.add("card-item");
-
-        // Add card icon
-        const cardIcon = document.createElement("img");
-        cardIcon.classList.add("card-icon");
-        cardIcon.src = "https://img.icons8.com/ios-filled/50/000000/credit-card.png"; // Placeholder card icon
-        cardIcon.alt = "Card Icon";
-
-        // Add card details
-        const cardDetails = document.createElement("div");
-        cardDetails.classList.add("card-details");
-        cardDetails.innerText = `${order.cardName} - ${order.amount}`;
-
-        // Add status label
-        const statusLabel = document.createElement("span");
-        statusLabel.classList.add("status-label");
-        statusLabel.classList.add(`status-${order.status.toLowerCase()}`);
-        statusLabel.innerText = order.status;
-
-        // Create expandable content
-        const expandContent = document.createElement("div");
-        expandContent.classList.add("expand-content");
-        expandContent.style.display = "block"; // By default open
-
-        // Add payment pending message
-        const paymentPending = document.createElement("p");
-        paymentPending.classList.add("payment-pending");
-        paymentPending.innerText = "Your payment is pending.";
-
-        // Add payment status
-        const paymentStatus = document.createElement("p");
-        paymentStatus.innerHTML = `Payment Status: <span class="payment-status">${order.status}</span>`;
-
-        // Add timer
-        const timer = document.createElement("p");
-        timer.innerHTML = `Time remaining: <span class="card-timer"></span>`;
-        const timerElement = timer.querySelector(".card-timer");
-
-        // Append expandable content
-        expandContent.appendChild(paymentPending);
-        expandContent.appendChild(paymentStatus);
-        expandContent.appendChild(timer);
-
-        // Append all elements to card item
-        cardItem.appendChild(cardIcon);
-        cardItem.appendChild(cardDetails);
-        cardItem.appendChild(statusLabel);
-        cardItem.appendChild(expandContent);
-
-        // Start timer immediately since content is open by default
-        if (order.status === "Pending") {
-            startCardTimer(order, timerElement);
-        }
-
-        // Add click event to toggle expand content
-        cardItem.addEventListener("click", () => {
-            const isExpanded = expandContent.style.display === "block";
-            expandContent.style.display = isExpanded ? "none" : "block";
-        });
-
-        purchasedCardsList.appendChild(cardItem);
-    });
-}
-
-// Go back to products
-function goToProducts() {
-    thankYouSection.style.display = "none";
-    waitingSection.style.display = "none";
-    showProducts();
-    displayPurchasedCards();
-    checkAllOrders();
-}
-
-// Add click event for Message Box
-messageContent.addEventListener("click", () => {
-    messageContent.innerHTML = "<p>No messages</p>";
+// Message Login Form
+document.getElementById("messageLoginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    alert("Messages Access Granted!");
+    document.getElementById("messageLoginPopup").style.display = "none";
 });
