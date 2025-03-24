@@ -4,563 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dark CC Market</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        body {
-            background-color: #0d0d0d;
-            color: #e0e0e0;
-            overflow-x: hidden;
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            background-color: #1a1a1a;
-            padding: 15px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        .navbar a {
-            color: #00ffff;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-
-        .navbar a:hover {
-            color: #ff0000;
-        }
-
-        /* Loading Spinner */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-        .spinner {
-            border: 4px solid #333;
-            border-top: 4px solid #00ffff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Login Container */
-        .login-container {
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            margin: 80px auto 20px;
-            display: none;
-            border: 1px solid #00ffff;
-        }
-
-        h1 {
-            font-size: 24px;
-            color: #00ffff;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        label {
-            display: block;
-            text-align: left;
-            font-size: 12px;
-            color: #00ffff;
-            margin-bottom: 5px;
-            margin-top: 10px;
-        }
-
-        .input-with-icon {
-            position: relative;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #00ffff;
-            border-radius: 5px;
-            font-size: 14px;
-            background-color: #333;
-            color: #e0e0e0;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #ff0000;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-        }
-
-        .icon {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 16px;
-            color: #00ffff;
-        }
-
-        .checkbox {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-        }
-
-        .checkbox input {
-            width: auto;
-            margin-right: 5px;
-        }
-
-        .checkbox label {
-            font-size: 12px;
-            color: #e0e0e0;
-            margin: 0;
-        }
-
-        .login-btn, .register-btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-
-        .login-btn {
-            background-color: #ff0000;
-            color: #fff;
-        }
-
-        .login-btn:hover {
-            background-color: #cc0000;
-        }
-
-        .register-btn {
-            background-color: #333;
-            color: #00ffff;
-            border: 1px solid #00ffff;
-        }
-
-        .register-btn:hover {
-            background-color: #00ffff;
-            color: #000;
-        }
-
-        .links {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-        }
-
-        .links a {
-            font-size: 12px;
-            color: #00ffff;
-            text-decoration: none;
-        }
-
-        .links a:hover {
-            color: #ff0000;
-        }
-
-        /* Category Selection */
-        .category-selection {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .category-selection h2 {
-            font-size: 20px;
-            color: #00ffff;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #00ffff;
-            padding-bottom: 5px;
-        }
-
-        .category-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .category-btn {
-            background-color: #333;
-            color: #00ffff;
-            border: 1px solid #00ffff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .category-btn:hover {
-            background-color: #00ffff;
-            color: #000;
-        }
-
-        /* Cards Table */
-        .cards-table-section {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: none;
-        }
-
-        .cards-table-section h2 {
-            font-size: 20px;
-            color: #00ffff;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #00ffff;
-            padding-bottom: 5px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #1a1a1a;
-            border: 1px solid #00ffff;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #00ffff;
-            font-size: 14px;
-        }
-
-        th {
-            background-color: #333;
-            color: #00ffff;
-            text-transform: uppercase;
-        }
-
-        td {
-            color: #e0e0e0;
-        }
-
-        .card-type {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        .card-type img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .valid {
-            color: #00ff00;
-        }
-
-        .invalid {
-            color: #ff0000;
-        }
-
-        .add-to-cart-btn {
-            background-color: #ff0000;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .add-to-cart-btn:hover {
-            background-color: #cc0000;
-        }
-
-        /* Cart Section */
-        .cart-container {
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            border: 1px solid #00ffff;
-        }
-
-        .cart-container h2 {
-            font-size: 20px;
-            color: #00ffff;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #00ffff;
-            margin-bottom: 10px;
-        }
-
-        .cart-item p {
-            font-size: 14px;
-            color: #e0e0e0;
-        }
-
-        .cart-item button {
-            background-color: #ff0000;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .cart-item button:hover {
-            background-color: #cc0000;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            padding: 10px;
-            background-color: #00ffff;
-            color: #000;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-
-        .checkout-btn:hover {
-            background-color: #00cccc;
-        }
-
-        /* Payment Popup */
-        .payment-popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .payment-content {
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-            border: 1px solid #00ffff;
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .payment-content h2 {
-            font-size: 20px;
-            color: #00ffff;
-            margin-bottom: 15px;
-        }
-
-        .payment-content p {
-            font-size: 14px;
-            color: #e0e0e0;
-            margin-bottom: 10px;
-        }
-
-        .payment-content .btc-address {
-            font-size: 14px;
-            color: #00ffff;
-            word-break: break-all;
-            margin-bottom: 15px;
-        }
-
-        .payment-content img {
-            width: 150px;
-            height: 150px;
-            margin-bottom: 15px;
-        }
-
-        .close-btn {
-            background-color: #ff0000;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .close-btn:hover {
-            background-color: #cc0000;
-        }
-
-        /* Customer Support Section */
-        .support-section {
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            border: 1px solid #00ffff;
-        }
-
-        .support-section h2 {
-            font-size: 20px;
-            color: #00ffff;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .support-section form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .support-section input, .support-section textarea {
-            padding: 10px;
-            border: 1px solid #00ffff;
-            border-radius: 5px;
-            background-color: #333;
-            color: #e0e0e0;
-        }
-
-        .support-section button {
-            padding: 10px;
-            background-color: #ff0000;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .support-section button:hover {
-            background-color: #cc0000;
-        }
-
-        /* Message Box (Error Fallback) */
-        .error-fallback {
-            text-align: center;
-            margin: 20px;
-            display: none;
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
-            border: 1px solid #ff0000;
-            animation: fadeIn 0.5s;
-        }
-
-        .error-fallback h2 {
-            color: #ff0000;
-            margin-bottom: 10px;
-        }
-
-        .error-fallback p {
-            color: #e0e0e0;
-        }
-
-        .error-fallback a {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #ff0000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .error-fallback a:hover {
-            background-color: #cc0000;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Live Chat Button */
-        .live-chat {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #00ffff;
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 14px;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-            transition: background-color 0.3s;
-        }
-
-        .live-chat:hover {
-            background-color: #00cccc;
-        }
-
-        @media (max-width: 400px) {
-            .login-container, .cart-container, .support-section {
-                margin: 10px;
-            }
-
-            table {
-                font-size: 12px;
-            }
-
-            th, td {
-                padding: 5px;
-            }
-        }
-    </style>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -608,23 +53,14 @@
         </form>
     </div>
 
-    <!-- Category Selection -->
-    <div class="category-selection" id="categorySelection">
-        <h2>Select Category</h2>
-        <div class="category-buttons">
-            <button class="category-btn" onclick="showCards('Premium CCs')">Premium CCs</button>
-            <button class="category-btn" onclick="showCards('Bulk Deals')">Bulk Deals</button>
-            <button class="category-btn" onclick="showCards('High Limit')">High Limit</button>
-            <button class="category-btn" onclick="showCards('Low Risk')">Low Risk</button>
-        </div>
-    </div>
-
     <!-- Cards Table -->
     <div class="cards-table-section" id="cardsTableSection">
-        <h2 id="categoryTitle"></h2>
+        <h2>All Cards</h2>
         <table id="cardsTable">
             <thead>
                 <tr>
+                    <th>Flag</th>
+                    <th>Country</th>
                     <th>Card Number</th>
                     <th>Type</th>
                     <th>Level</th>
@@ -636,13 +72,6 @@
             </thead>
             <tbody id="cardsTableBody"></tbody>
         </table>
-    </div>
-
-    <!-- Cart Container -->
-    <div class="cart-container" id="cartContainer">
-        <h2>🛒 YOUR CART</h2>
-        <div class="cart-items" id="cartItems"></div>
-        <button class="checkout-btn" onclick="showPaymentPopup()">Checkout with BTC</button>
     </div>
 
     <!-- Payment Popup -->
@@ -657,8 +86,39 @@
         </div>
     </div>
 
+    <!-- Chat Login Popup -->
+    <div class="chat-login-popup" id="chatLoginPopup">
+        <div class="chat-login-content">
+            <h2>Chat Access</h2>
+            <p>This option will be available after buying a card.</p>
+        </div>
+    </div>
+
+    <!-- Message Login Popup -->
+    <div class="message-login-popup" id="messageLoginPopup">
+        <div class="message-login-content">
+            <h2>Messages Access</h2>
+            <p>Please login to access your messages.</p>
+            <form id="messageLoginForm">
+                <label for="messageUsername">USERNAME</label>
+                <div class="input-with-icon">
+                    <input type="text" id="messageUsername" name="messageUsername" placeholder="Enter Username">
+                    <span class="icon">👤</span>
+                </div>
+
+                <label for="messagePassword">PASSWORD</label>
+                <div class="input-with-icon">
+                    <input type="password" id="messagePassword" name="messagePassword" placeholder="Enter Password">
+                    <span class="icon">🔒</span>
+                </div>
+
+                <button type="submit" class="login-btn">LOGIN</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Customer Support Section -->
-    <div class="support-section">
+    <div class="support-section" id="supportSection">
         <h2>Customer Support</h2>
         <form>
             <input type="text" placeholder="Your Name" required>
@@ -668,6 +128,12 @@
         </form>
     </div>
 
+    <!-- Message Box Button -->
+    <div class="message-box-btn" onclick="openMessageLogin()">📩 Messages</div>
+
+    <!-- Chat Support Button -->
+    <div class="chat-support-btn" onclick="openChatLogin()">💬 Chat</div>
+
     <!-- Fallback Content for Error -->
     <div class="error-fallback" id="errorFallback">
         <h2>ERROR DETECTED</h2>
@@ -675,133 +141,6 @@
         <a href="#" onclick="history.back()">Go Back</a>
     </div>
 
-    <!-- Live Chat Button -->
-    <a href="#" class="live-chat">💬 Live Chat</a>
-
-    <script>
-        // List of cards with updated details
-        const cards = [
-            { id: 1, category: "Premium CCs", number: "522446", type: "CREDIT", brand: "MasterCard", level: "ELECTRONIC", expiry: "XX/23", valid: true, price: "$80", warranty: "100% Validated" },
-            { id: 2, category: "Premium CCs", number: "554900", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/26", valid: false, price: "$85", warranty: "100% Validated" },
-            { id: 3, category: "Bulk Deals", number: "400570", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
-            { id: 4, category: "Bulk Deals", number: "400570", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
-            { id: 5, category: "High Limit", number: "506775", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/24", valid: false, price: "$90", warranty: "100% Validated" },
-            { id: 6, category: "High Limit", number: "430675", type: "CREDIT", brand: "Visa", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
-            { id: 7, category: "Low Risk", number: "550209", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/28", valid: true, price: "$66", risk: "Low Risk" },
-            { id: 8, category: "Low Risk", number: "546325", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: true, price: "$68", risk: "Low Risk" },
-            { id: 9, category: "Premium CCs", number: "491675", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/27", valid: false, price: "$88", warranty: "100% Validated" },
-            { id: 10, category: "Bulk Deals", number: "400881", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/25", valid: false, price: "$64", risk: "Medium Risk" },
-            { id: 11, category: "High Limit", number: "833120", type: "UNKNOWN", brand: "Unknown", level: "N/A", expiry: "XX/24", valid: false, price: "$94", warranty: "100% Validated" },
-            { id: 12, category: "Low Risk", number: "483042", type: "CREDIT", brand: "Visa", level: "PLATINUM", expiry: "XX/24", valid: false, price: "$70", risk: "Low Risk" }
-        ];
-
-        // Load saved username and password from LocalStorage
-        window.onload = function() {
-            setTimeout(function() {
-                document.getElementById("loading").style.display = "none";
-                document.getElementById("loginContainer").style.display = "block";
-                document.getElementById("categorySelection").style.display = "block";
-                document.getElementById("cartContainer").style.display = "block";
-            }, 2000);
-
-            // Check if username and password are saved in LocalStorage
-            const savedUsername = localStorage.getItem("username");
-            const savedPassword = localStorage.getItem("password");
-
-            if (savedUsername) {
-                document.getElementById("username").value = savedUsername;
-            }
-            if (savedPassword) {
-                document.getElementById("password").value = savedPassword;
-            }
-        };
-
-        // Save username and password to LocalStorage on form submit
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            localStorage.setItem("username", username);
-            localStorage.setItem("password", password);
-
-            alert("Access Granted! Credentials saved.");
-        });
-
-        // Toggle Password Visibility
-        function togglePassword() {
-            var passwordField = document.getElementById("password");
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-            } else {
-                passwordField.type = "password";
-            }
-        }
-
-        // Show cards for selected category
-        function showCards(category) {
-            const cardsTableSection = document.getElementById("cardsTableSection");
-            const categoryTitle = document.getElementById("categoryTitle");
-            const cardsTableBody = document.getElementById("cardsTableBody");
-
-            categoryTitle.textContent = category;
-            cardsTableBody.innerHTML = "";
-
-            const filteredCards = cards.filter(card => card.category === category);
-
-            filteredCards.forEach(card => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${card.number}</td>
-                    <td class="card-type">
-                        ${card.brand === "Visa" ? '<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">' : 
-                        card.brand === "MasterCard" ? '<img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard">' : 
-                        '<img src="https://via.placeholder.com/20" alt="Unknown">'} 
-                        ${card.type}
-                    </td>
-                    <td>${card.level}</td>
-                    <td>${card.expiry}</td>
-                    <td class="${card.valid ? 'valid' : 'invalid'}">${card.valid ? '✔️' : '❌'}</td>
-                    <td>${card.price} ${card.risk ? `(${card.risk})` : card.warranty ? `(${card.warranty})` : ''}</td>
-                    <td><button class="add-to-cart-btn" onclick="addToCart(${card.id})">Add to Cart</button></td>
-                `;
-                cardsTableBody.appendChild(row);
-            });
-
-            cardsTableSection.style.display = "block";
-            window.scrollTo({ top: cardsTableSection.offsetTop, behavior: "smooth" });
-        }
-
-        // Add to cart
-        function addToCart(cardId) {
-            const card = cards.find(c => c.id === cardId);
-            const cartItems = document.getElementById("cartItems");
-            const cartItem = document.createElement("div");
-            cartItem.className = "cart-item";
-            cartItem.innerHTML = `
-                <p>${card.number} - ${card.type} (${card.level}) - ${card.price}</p>
-                <button onclick="removeFromCart(this)">Remove</button>
-            `;
-            cartItems.appendChild(cartItem);
-        }
-
-        // Remove item from cart
-        function removeFromCart(button) {
-            button.parentElement.remove();
-        }
-
-        // Show payment popup
-        function showPaymentPopup() {
-            const paymentPopup = document.getElementById("paymentPopup");
-            paymentPopup.style.display = "flex";
-        }
-
-        // Close payment popup
-        function closePaymentPopup() {
-            const paymentPopup = document.getElementById("paymentPopup");
-            paymentPopup.style.display = "none";
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
