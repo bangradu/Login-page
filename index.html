@@ -3,560 +3,681 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Purchase System</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Dark CC Market</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #2c2c2c;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .navbar a {
+            color: #00ff00;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ff0000;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #00ff00;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Login Container */
+        .login-container {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin: 80px auto 20px;
+            display: none;
+            border: 1px solid #00ff00;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            font-size: 12px;
+            color: #00ff00;
+            margin-bottom: 5px;
+            margin-top: 10px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: #333;
+            color: #e0e0e0;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #00ff00;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .checkbox input {
+            width: auto;
+            margin-right: 5px;
+        }
+
+        .checkbox label {
+            font-size: 12px;
+            color: #e0e0e0;
+            margin: 0;
+        }
+
+        .login-btn, .register-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn {
+            background-color: #ff0000;
+            color: #fff;
+        }
+
+        .login-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .register-btn {
+            background-color: #333;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+
+        .register-btn:hover {
+            background-color: #00ff00;
+            color: #000;
+        }
+
+        .links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .links a {
+            font-size: 12px;
+            color: #00ff00;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            color: #ff0000;
+        }
+
+        /* Cards Section */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #00ff00;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        /* Cart Section */
+        .cart-container {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border: 1px solid #00ff00;
+        }
+
+        .cart-container h2 {
+            font-size: 20px;
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #00ff00;
+            margin-bottom: 10px;
+        }
+
+        .cart-item p {
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .cart-item button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item button:hover {
+            background-color: #cc0000;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #00cc00;
+        }
+
+        /* Message Box (Error Fallback) */
+        .error-fallback {
+            text-align: center;
+            margin: 20px;
+            display: none;
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+            border: 1px solid #ff0000;
+            animation: fadeIn 0.5s;
+        }
+
+        .error-fallback h2 {
+            color: #ff0000;
+            margin-bottom: 10px;
+        }
+
+        .error-fallback p {
+            color: #e0e0e0;
+        }
+
+        .error-fallback a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #ff0000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .error-fallback a:hover {
+            background-color: #cc0000;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Live Chat Button */
+        .live-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #00ff00;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            transition: background-color 0.3s;
+        }
+
+        .live-chat:hover {
+            background-color: #00cc00;
+        }
+
+        @media (max-width: 400px) {
+            .login-container, .cart-container {
+                margin: 10px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <!-- Register Section -->
-    <div id="registerSection">
-        <h2>Register</h2>
-        <input type="text" id="registerUsername" placeholder="Username" required>
-        <input type="password" id="registerPassword" placeholder="Password" required>
-        <button onclick="register()">Register</button>
-        <p id="registerErrorMessage" style="display: none;">Username already exists!</p>
-        <p>Already have an account? <span class="link" onclick="showLogin()">Login here</span></p>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="#" onclick="history.back()">Back</a>
+        <a href="#">Dark Market</a>
     </div>
 
-    <!-- Login Section -->
-    <div id="loginSection">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button onclick="login()">Login</button>
-        <p id="errorMessage" style="display: none;">Invalid username or password!</p>
-        <p>Don't have an account? <span class="link" onclick="showRegister()">Register here</span></p>
+    <!-- Loading Spinner -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
     </div>
 
-    <!-- Products Section -->
-    <div id="productsSection">
-        <h2 id="welcomeMessage">Welcome!</h2>
-        <button class="logout-btn" onclick="logout()">Logout</button>
-        <h3>Our Cards</h3>
-
-        <!-- Message Box Section -->
-        <div id="messageBoxSection">
-            <div class="message-header">
-                <h3>Messages</h3>
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <h1>SECURE LOGIN</h1>
+        <form id="loginForm">
+            <label for="username">USERNAME</label>
+            <div class="input-with-icon">
+                <input type="text" id="username" name="username" placeholder="Enter Username">
+                <span class="icon">👤</span>
             </div>
-            <div id="messageContent" class="message-content">
-                <img src="envelope-icon.png" alt="Envelope Icon" class="envelope-icon">
-                <p>Click to view messages</p>
+
+            <label for="password">PASSWORD</label>
+            <div class="input-with-icon">
+                <input type="password" id="password" name="password" placeholder="Enter Password">
+                <span class="icon">🔒</span>
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="show-password" onclick="togglePassword()">
+                <label for="show-password">SHOW PASSWORD</label>
+            </div>
+
+            <label for="captcha">6+3=?</label>
+            <input type="text" id="captcha" name="captcha" placeholder="Enter Answer">
+
+            <button type="submit" class="login-btn">LOGIN</button>
+            <button type="button" class="register-btn">REGISTER</button>
+
+            <div class="links">
+                <a href="#">Forget Password?</a>
+                <a href="#">Contact Support</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Cart Container -->
+    <div class="cart-container" id="cartContainer">
+        <h2>🛒 YOUR CART</h2>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-item">
+                <p>USA CC - 4532-XXXX-XXXX-1234 (Exp: 12/25, CVV: 123)</p>
+                <button onclick="removeFromCart(this)">Remove</button>
+            </div>
+            <div class="cart-item">
+                <p>Japan CC - 5423-XXXX-XXXX-5678 (Exp: 09/24, CVV: 456)</p>
+                <button onclick="removeFromCart(this)">Remove</button>
+            </div>
+            <div class="cart-item">
+                <p>Brazil CC - 3782-XXXX-XXXX-9012 (Exp: 06/26, CVV: 789)</p>
+                <button onclick="removeFromCart(this)">Remove</button>
             </div>
         </div>
-
-        <!-- Orders Section -->
-        <div id="purchasedCardsSection">
-            <div class="purchased-header">
-                <h3>Orders</h3>
-            </div>
-            <div id="purchasedCardsList"></div>
-        </div>
-
-        <table id="productsTable">
-            <thead>
-                <tr>
-                    <th>BIN</th>
-                    <th>Type</th>
-                    <th>Subtype</th>
-                    <th>Expiry</th>
-                    <th>Name</th>
-                    <th>Country</th>
-                    <th>State</th>
-                    <th>Full</th>
-                    <th>Zip</th>
-                    <th>Extra Info</th>
-                    <th>Base</th>
-                    <th>Price</th>
-                    <th>Buy</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>403163</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>02/30</td>
-                    <td>TERUNDA ***</td>
-                    <td>US</td>
-                    <td>SC</td>
-                    <td>Yes</td>
-                    <td>29***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$100</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 1', '$100')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>524543</td>
-                    <td>DEBIT</td>
-                    <td>STANDARD</td>
-                    <td>10/29</td>
-                    <td>SHANNON ***</td>
-                    <td>US</td>
-                    <td>IL</td>
-                    <td>Yes</td>
-                    <td>60***</td>
-                    <td>BANK OF, non-refunded</td>
-                    <td>$</td>
-                    <td>$105</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 2', '$105')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>403163</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>08/29</td>
-                    <td>RASHAAD ***</td>
-                    <td>US</td>
-                    <td>MD</td>
-                    <td>Yes</td>
-                    <td>21***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$110</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 3', '$110')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>524543</td>
-                    <td>DEBIT</td>
-                    <td>PREPAID</td>
-                    <td>01/29</td>
-                    <td>KHALID ***</td>
-                    <td>US</td>
-                    <td>CT</td>
-                    <td>Yes</td>
-                    <td>06***</td>
-                    <td>BANK OF, non-refunded</td>
-                    <td>$</td>
-                    <td>$115</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 4', '$115')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>403163</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>12/29</td>
-                    <td>JAMY ***</td>
-                    <td>US</td>
-                    <td>IL</td>
-                    <td>Yes</td>
-                    <td>60***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$120</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 5', '$120')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>515756</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>04/27</td>
-                    <td>SREE ***</td>
-                    <td>US</td>
-                    <td>IL</td>
-                    <td>Yes</td>
-                    <td>60***</td>
-                    <td>HSBC, non-refunded</td>
-                    <td>$</td>
-                    <td>$125</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 6', '$125')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>403163</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>03/29</td>
-                    <td>AMBROSIA ***</td>
-                    <td>US</td>
-                    <td>FL</td>
-                    <td>Yes</td>
-                    <td>33***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$130</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 7', '$130')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>510805</td>
-                    <td>DEBIT</td>
-                    <td>STANDARD</td>
-                    <td>03/26</td>
-                    <td>ROSALYN ***</td>
-                    <td>US</td>
-                    <td>IL</td>
-                    <td>Yes</td>
-                    <td>60***</td>
-                    <td>ING BANK, non-refunded</td>
-                    <td>$</td>
-                    <td>$135</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 8', '$135')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>440393</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>02/28</td>
-                    <td>AYE ***</td>
-                    <td>US</td>
-                    <td>IL</td>
-                    <td>Yes</td>
-                    <td>62***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$140</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 9', '$140')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>475703</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>02/28</td>
-                    <td>CHARLOTTE ***</td>
-                    <td>US</td>
-                    <td>SC</td>
-                    <td>Yes</td>
-                    <td>29***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$145</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 10', '$145')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>555753</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>12/29</td>
-                    <td>KIMBERLY ***</td>
-                    <td>US</td>
-                    <td>MD</td>
-                    <td>Yes</td>
-                    <td>21***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$150</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 11', '$150')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>512992</td>
-                    <td>DEBIT</td>
-                    <td>N/A</td>
-                    <td>01/26</td>
-                    <td>BENJAMIN ***</td>
-                    <td>US</td>
-                    <td>MA</td>
-                    <td>Yes</td>
-                    <td>01***</td>
-                    <td>CREDIT DATA, non-refunded</td>
-                    <td>$</td>
-                    <td>$155</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 12', '$155')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>510805</td>
-                    <td>DEBIT</td>
-                    <td>STANDARD</td>
-                    <td>05/27</td>
-                    <td>MELINA VANDERPOOL ***</td>
-                    <td>US</td>
-                    <td>LA</td>
-                    <td>Yes</td>
-                    <td>70***</td>
-                    <td>F.S.B., non-refunded</td>
-                    <td>$</td>
-                    <td>$160</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 13', '$160')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>544317</td>
-                    <td>CREDIT</td>
-                    <td>GOLD</td>
-                    <td>02/30</td>
-                    <td>EVA ***</td>
-                    <td>US</td>
-                    <td>CO</td>
-                    <td>Yes</td>
-                    <td>99***</td>
-                    <td>HSBC BANK NEVADA, N.A., non-refunded</td>
-                    <td>$</td>
-                    <td>$165</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 14', '$165')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>411770</td>
-                    <td>DEBIT</td>
-                    <td>PLATINUM</td>
-                    <td>01/30</td>
-                    <td>HALEY N/A ***</td>
-                    <td>US</td>
-                    <td>MA</td>
-                    <td>Yes</td>
-                    <td>02***</td>
-                    <td>net refundable</td>
-                    <td>$</td>
-                    <td>$170</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 15', '$170')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>529580</td>
-                    <td>DEBIT</td>
-                    <td>PREPAID</td>
-                    <td>12/27</td>
-                    <td>SAVANNAH ***</td>
-                    <td>US</td>
-                    <td>IL</td>
-                    <td>Yes</td>
-                    <td>62***</td>
-                    <td>VINCENT, LTD., non-refunded</td>
-                    <td>$</td>
-                    <td>$175</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 16', '$175')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>446613</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>02/30</td>
-                    <td>DAVID ***</td>
-                    <td>US</td>
-                    <td>CT</td>
-                    <td>Yes</td>
-                    <td>06***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$180</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 17', '$180')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>406032</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>06/29</td>
-                    <td>JESSICA ***</td>
-                    <td>US</td>
-                    <td>IN</td>
-                    <td>Yes</td>
-                    <td>46***</td>
-                    <td>CHASE BANK, non-refunded</td>
-                    <td>$</td>
-                    <td>$185</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 18', '$185')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>519385</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>02/30</td>
-                    <td>MORGAN ***</td>
-                    <td>US</td>
-                    <td>LA</td>
-                    <td>Yes</td>
-                    <td>77***</td>
-                    <td>BANK OF, non-refunded</td>
-                    <td>$</td>
-                    <td>$190</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 19', '$190')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>475055</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>04/29</td>
-                    <td>LEAH ***</td>
-                    <td>US</td>
-                    <td>AZ</td>
-                    <td>Yes</td>
-                    <td>85***</td>
-                    <td>JPMORGAN CHASE BANK, non-refunded</td>
-                    <td>$</td>
-                    <td>$195</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 20', '$195')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>483312</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>02/28</td>
-                    <td>GARRET ***</td>
-                    <td>US</td>
-                    <td>MI</td>
-                    <td>Yes</td>
-                    <td>48***</td>
-                    <td>JPMORGAN CHASE BANK, non-refunded</td>
-                    <td>$</td>
-                    <td>$200</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 21', '$200')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>546629</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>02/26</td>
-                    <td>KATHY ***</td>
-                    <td>US</td>
-                    <td>FL</td>
-                    <td>Yes</td>
-                    <td>60***</td>
-                    <td>SALL, non-refunded</td>
-                    <td>$</td>
-                    <td>$205</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 22', '$205')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>426697</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>02/27</td>
-                    <td>OCONNOR N/A ***</td>
-                    <td>US</td>
-                    <td>CO</td>
-                    <td>Yes</td>
-                    <td>99***</td>
-                    <td>WELLS FARGO, non-refunded</td>
-                    <td>$</td>
-                    <td>$210</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 23', '$210')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>373339</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>03/29</td>
-                    <td>JESSICA CARDONA ***</td>
-                    <td>US</td>
-                    <td>CO</td>
-                    <td>Yes</td>
-                    <td>99***</td>
-                    <td>COMPANY, non-refunded</td>
-                    <td>$</td>
-                    <td>$215</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 24', '$215')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>483316</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>07/27</td>
-                    <td>BROOKE ***</td>
-                    <td>US</td>
-                    <td>ID</td>
-                    <td>Yes</td>
-                    <td>83***</td>
-                    <td>JPMORGAN CHASE BANK, non-refunded</td>
-                    <td>$</td>
-                    <td>$220</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 25', '$220')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>482421</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>01/29</td>
-                    <td>KATHLEEN ***</td>
-                    <td>US</td>
-                    <td>PA</td>
-                    <td>Yes</td>
-                    <td>15***</td>
-                    <td>1ST SUMMIT BANK, non-refunded</td>
-                    <td>$</td>
-                    <td>$225</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 26', '$225')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>436172</td>
-                    <td>DEBIT</td>
-                    <td>CLASSIC</td>
-                    <td>12/27</td>
-                    <td>RACHEL ***</td>
-                    <td>US</td>
-                    <td>CT</td>
-                    <td>Yes</td>
-                    <td>06***</td>
-                    <td>UNION, non-refunded</td>
-                    <td>$</td>
-                    <td>$230</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 27', '$230')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>601100</td>
-                    <td>CREDIT</td>
-                    <td>PLATINUM</td>
-                    <td>08/25</td>
-                    <td>KATE ***</td>
-                    <td>US</td>
-                    <td>AL</td>
-                    <td>Yes</td>
-                    <td>35***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$235</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 28', '$235')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>601100</td>
-                    <td>CREDIT</td>
-                    <td>PLATINUM</td>
-                    <td>12/27</td>
-                    <td>SHAYNA ***</td>
-                    <td>US</td>
-                    <td>IL</td>
-                    <td>Yes</td>
-                    <td>60***</td>
-                    <td>N/A, non-refunded</td>
-                    <td>$</td>
-                    <td>$240</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 29', '$240')">Buy</button></td>
-                </tr>
-                <tr>
-                    <td>379818</td>
-                    <td>CREDIT</td>
-                    <td>N/A</td>
-                    <td>11/27</td>
-                    <td>ANGEL N/A ***</td>
-                    <td>US</td>
-                    <td>WA</td>
-                    <td>Yes</td>
-                    <td>05***</td>
-                    <td>EXPRESS US, non-refunded</td>
-                    <td>$</td>
-                    <td>$245</td>
-                    <td><button class="buy-btn" onclick="buyCard('Card 30', '$245')">Buy</button></td>
-                </tr>
-            </tbody>
-        </table>
+        <button class="checkout-btn" onclick="alert('Proceeding to checkout...')">Checkout</button>
     </div>
 
-    <!-- Waiting Section -->
-    <div id="waitingSection">
-        <p>You will receive your card in the message box after the payment is confirmed.</p>
-        <p id="paymentPendingMessage">Your payment is pending.</p>
-        <p>Payment Status: <span id="paymentStatus">Pending</span></p>
-        <p>Your order is being processed, please wait for 6 hours.</p>
-        <p>Time remaining: <span id="timer"></span></p>
-        <button onclick="goToProducts()">Back to Products</button>
+    <!-- Cards Container -->
+    <div class="cards-container" id="cardsContainer">
+        <!-- Cards will be added dynamically via JavaScript -->
     </div>
 
-    <!-- Thank You Section -->
-    <div id="thankYouSection">
-        <h2>Thank You!</h2>
-        <p>Your order has been successfully processed.</p>
-        <button onclick="goToProducts()">Back to Products</button>
+    <!-- Fallback Content for Error -->
+    <div class="error-fallback" id="errorFallback">
+        <h2>ERROR DETECTED</h2>
+        <p>Connection failed. Please try again or contact support.</p>
+        <a href="#" onclick="history.back()">Go Back</a>
     </div>
-</div>
 
-<!-- Popup for Deposit Address -->
-<div id="qrPopup" class="popup">
-    <div class="popup-content">
-        <span class="close-btn" onclick="closePopup()">×</span>
-        <h3>Pay with BTC</h3>
-        <p>Please send the payment for <span id="cardName"></span>.</p>
-        <p>Amount to Pay: <span id="amountToPay"></span></p>
-        <p>Deposit Address: <span id="depositAddress">1GxPWCrYtdSNQwCuBPFZnWHADU7NNJu99</span></p>
-        <button onclick="copyAddress()">Copy Address</button>
-        <button onclick="confirmPayment()">I Have Paid</button>
-    </div>
-</div>
+    <!-- Live Chat Button -->
+    <a href="#" class="live-chat">💬 Live Chat</a>
 
-<script src="script.js"></script>
+    <script>
+        // List of 150 countries (excluding India) with CC buyer context
+        const countries = [
+            { name: "USA", flag: "🇺🇸", description: "Premium CCs - High Balance" },
+            { name: "Japan", flag: "🇯🇵", description: "Fresh CCs - Low Risk" },
+            { name: "Brazil", flag: "🇧🇷", description: "Cheap CCs - Bulk Deals" },
+            { name: "Germany", flag: "🇩🇪", description: "Verified CCs - Secure" },
+            { name: "France", flag: "🇫🇷", description: "Elite CCs - High Limit" },
+            { name: "Australia", flag: "🇦🇺", description: "Fresh CCs - Fast Delivery" },
+            { name: "Canada", flag: "🇨🇦", description: "Premium CCs - Trusted" },
+            { name: "South Korea", flag: "🇰🇷", description: "Cheap CCs - Bulk Offers" },
+            { name: "Italy", flag: "🇮🇹", description: "Verified CCs - Secure" },
+            { name: "UK", flag: "🇬🇧", description: "Elite CCs - High Balance" },
+            { name: "Spain", flag: "🇪🇸", description: "Fresh CCs - Low Risk" },
+            { name: "Mexico", flag: "🇲🇽", description: "Cheap CCs - Bulk Deals" },
+            { name: "China", flag: "🇨🇳", description: "Verified CCs - Secure" },
+            { name: "Russia", flag: "🇷🇺", description: "Premium CCs - High Limit" },
+            { name: "South Africa", flag: "🇿🇦", description: "Fresh CCs - Fast Delivery" },
+            { name: "Argentina", flag: "🇦🇷", description: "Cheap CCs - Bulk Offers" },
+            { name: "Egypt", flag: "🇪🇬", description: "Verified CCs - Secure" },
+            { name: "Turkey", flag: "🇹🇷", description: "Elite CCs - High Balance" },
+            { name: "Thailand", flag: "🇹🇭", description: "Fresh CCs - Low Risk" },
+            { name: "New Zealand", flag: "🇳🇿", description: "Premium CCs - Trusted" },
+            { name: "Sweden", flag: "🇸🇪", description: "Cheap CCs - Bulk Deals" },
+            { name: "Netherlands", flag: "🇳🇱", description: "Verified CCs - Secure" },
+            { name: "Switzerland", flag: "🇨🇭", description: "Elite CCs - High Limit" },
+            { name: "Greece", flag: "🇬🇷", description: "Fresh CCs - Fast Delivery" },
+            { name: "Portugal", flag: "🇵🇹", description: "Premium CCs - Trusted" },
+            { name: "Norway", flag: "🇳🇴", description: "Cheap CCs - Bulk Offers" },
+            { name: "Denmark", flag: "🇩🇰", description: "Verified CCs - Secure" },
+            { name: "Finland", flag: "🇫🇮", description: "Elite CCs - High Balance" },
+            { name: "Ireland", flag: "🇮🇪", description: "Fresh CCs - Low Risk" },
+            { name: "Belgium", flag: "🇧🇪", description: "Premium CCs - Trusted" },
+            { name: "Austria", flag: "🇦🇹", description: "Cheap CCs - Bulk Deals" },
+            { name: "Poland", flag: "🇵🇱", description: "Verified CCs - Secure" },
+            { name: "Hungary", flag: "🇭🇺", description: "Elite CCs - High Limit" },
+            { name: "Czech Republic", flag: "🇨🇿", description: "Fresh CCs - Fast Delivery" },
+            { name: "Slovakia", flag: "🇸🇰", description: "Premium CCs - Trusted" },
+            { name: "Romania", flag: "🇷🇴", description: "Cheap CCs - Bulk Offers" },
+            { name: "Bulgaria", flag: "🇧🇬", description: "Verified CCs - Secure" },
+            { name: "Croatia", flag: "🇭🇷", description: "Elite CCs - High Balance" },
+            { name: "Serbia", flag: "🇷🇸", description: "Fresh CCs - Low Risk" },
+            { name: "Bosnia", flag: "🇧🇦", description: "Premium CCs - Trusted" },
+            { name: "Albania", flag: "🇦🇱", description: "Cheap CCs - Bulk Deals" },
+            { name: "Montenegro", flag: "🇲🇪", description: "Verified CCs - Secure" },
+            { name: "Macedonia", flag: "🇲🇰", description: "Elite CCs - High Limit" },
+            { name: "Slovenia", flag: "🇸🇮", description: "Fresh CCs - Fast Delivery" },
+            { name: "Estonia", flag: "🇪🇪", description: "Premium CCs - Trusted" },
+            { name: "Latvia", flag: "🇱🇻", description: "Cheap CCs - Bulk Offers" },
+            { name: "Lithuania", flag: "🇱🇹", description: "Verified CCs - Secure" },
+            { name: "Ukraine", flag: "🇺🇦", description: "Elite CCs - High Balance" },
+            { name: "Belarus", flag: "🇧🇾", description: "Fresh CCs - Low Risk" },
+            { name: "Georgia", flag: "🇬🇪", description: "Premium CCs - Trusted" },
+            { name: "Armenia", flag: "🇦🇲", description: "Cheap CCs - Bulk Deals" },
+            { name: "Azerbaijan", flag: "🇦🇿", description: "Verified CCs - Secure" },
+            { name: "Kazakhstan", flag: "🇰🇿", description: "Elite CCs - High Limit" },
+            { name: "Uzbekistan", flag: "🇺🇿", description: "Fresh CCs - Fast Delivery" },
+            { name: "Turkmenistan", flag: "🇹🇲", description: "Premium CCs - Trusted" },
+            { name: "Kyrgyzstan", flag: "🇰🇬", description: "Cheap CCs - Bulk Offers" },
+            { name: "Tajikistan", flag: "🇹🇯", description: "Verified CCs - Secure" },
+            { name: "Mongolia", flag: "🇲🇳", description: "Elite CCs - High Balance" },
+            { name: "Vietnam", flag: "🇻🇳", description: "Fresh CCs - Low Risk" },
+            { name: "Philippines", flag: "🇵🇭", description: "Premium CCs - Trusted" },
+            { name: "Malaysia", flag: "🇲🇾", description: "Cheap CCs - Bulk Deals" },
+            { name: "Singapore", flag: "🇸🇬", description: "Verified CCs - Secure" },
+            { name: "Indonesia", flag: "🇮🇩", description: "Elite CCs - High Limit" },
+            { name: "Cambodia", flag: "🇰🇭", description: "Fresh CCs - Fast Delivery" },
+            { name: "Laos", flag: "🇱🇦", description: "Premium CCs - Trusted" },
+            { name: "Myanmar", flag: "🇲🇲", description: "Cheap CCs - Bulk Offers" },
+            { name: "Nepal", flag: "🇳🇵", description: "Verified CCs - Secure" },
+            { name: "Bhutan", flag: "🇧🇹", description: "Elite CCs - High Balance" },
+            { name: "Sri Lanka", flag: "🇱🇰", description: "Fresh CCs - Low Risk" },
+            { name: "Maldives", flag: "🇲🇻", description: "Premium CCs - Trusted" },
+            { name: "Bangladesh", flag: "🇧🇩", description: "Cheap CCs - Bulk Deals" },
+            { name: "Pakistan", flag: "🇵🇰", description: "Verified CCs - Secure" },
+            { name: "Afghanistan", flag: "🇦🇫", description: "Elite CCs - High Limit" },
+            { name: "Iran", flag: "🇮🇷", description: "Fresh CCs - Fast Delivery" },
+            { name: "Iraq", flag: "🇮🇶", description: "Premium CCs - Trusted" },
+            { name: "Syria", flag: "🇸🇾", description: "Cheap CCs - Bulk Offers" },
+            { name: "Lebanon", flag: "🇱🇧", description: "Verified CCs - Secure" },
+            { name: "Jordan", flag: "🇯🇴", description: "Elite CCs - High Balance" },
+            { name: "Israel", flag: "🇮🇱", description: "Fresh CCs - Low Risk" },
+            { name: "Palestine", flag: "🇵🇸", description: "Premium CCs - Trusted" },
+            { name: "Saudi Arabia", flag: "🇸🇦", description: "Cheap CCs - Bulk Deals" },
+            { name: "UAE", flag: "🇦🇪", description: "Verified CCs - Secure" },
+            { name: "Qatar", flag: "🇶🇦", description: "Elite CCs - High Limit" },
+            { name: "Kuwait", flag: "🇰🇼", description: "Fresh CCs - Fast Delivery" },
+            { name: "Bahrain", flag: "🇧🇭", description: "Premium CCs - Trusted" },
+            { name: "Oman", flag: "🇴🇲", description: "Cheap CCs - Bulk Offers" },
+            { name: "Yemen", flag: "🇾🇪", description: "Verified CCs - Secure" },
+            { name: "Algeria", flag: "🇩🇿", description: "Elite CCs - High Balance" },
+            { name: "Morocco", flag: "🇲🇦", description: "Fresh CCs - Low Risk" },
+            { name: "Tunisia", flag: "🇹🇳", description: "Premium CCs - Trusted" },
+            { name: "Libya", flag: "🇱🇾", description: "Cheap CCs - Bulk Deals" },
+            { name: "Sudan", flag: "🇸🇩", description: "Verified CCs - Secure" },
+            { name: "South Sudan", flag: "🇸🇸", description: "Elite CCs - High Limit" },
+            { name: "Ethiopia", flag: "🇪🇹", description: "Fresh CCs - Fast Delivery" },
+            { name: "Kenya", flag: "🇰🇪", description: "Premium CCs - Trusted" },
+            { name: "Tanzania", flag: "🇹🇿", description: "Cheap CCs - Bulk Offers" },
+            { name: "Uganda", flag: "🇺🇬", description: "Verified CCs - Secure" },
+            { name: "Rwanda", flag: "🇷🇼", description: "Elite CCs - High Balance" },
+            { name: "Ghana", flag: "🇬🇭", description: "Fresh CCs - Low Risk" },
+            { name: "Nigeria", flag: "🇳🇬", description: "Premium CCs - Trusted" },
+            { name: "Cameroon", flag: "🇨🇲", description: "Cheap CCs - Bulk Deals" },
+            { name: "Zimbabwe", flag: "🇿🇼", description: "Verified CCs - Secure" },
+            { name: "Zambia", flag: "🇿🇲", description: "Elite CCs - High Limit" },
+            { name: "Malawi", flag: "🇲🇼", description: "Fresh CCs - Fast Delivery" },
+            { name: "Mozambique", flag: "🇲🇿", description: "Premium CCs - Trusted" },
+            { name: "Madagascar", flag: "🇲🇬", description: "Cheap CCs - Bulk Offers" },
+            { name: "Botswana", flag: "🇧🇼", description: "Verified CCs - Secure" },
+            { name: "Namibia", flag: "🇳🇦", description: "Elite CCs - High Balance" },
+            { name: "Angola", flag: "🇦🇴", description: "Fresh CCs - Low Risk" },
+            { name: "Chad", flag: "🇹🇩", description: "Premium CCs - Trusted" },
+            { name: "Niger", flag: "🇳🇪", description: "Cheap CCs - Bulk Deals" },
+            { name: "Mali", flag: "🇲🇱", description: "Verified CCs - Secure" },
+            { name: "Burkina Faso", flag: "🇧🇫", description: "Elite CCs - High Limit" },
+            { name: "Ivory Coast", flag: "🇨🇮", description: "Fresh CCs - Fast Delivery" },
+            { name: "Senegal", flag: "🇸🇳", description: "Premium CCs - Trusted" },
+            { name: "Guinea", flag: "🇬🇳", description: "Cheap CCs - Bulk Offers" },
+            { name: "Sierra Leone", flag: "🇸🇱", description: "Verified CCs - Secure" },
+            { name: "Liberia", flag: "🇱🇷", description: "Elite CCs - High Balance" },
+            { name: "Togo", flag: "🇹🇬", description: "Fresh CCs - Low Risk" },
+            { name: "Benin", flag: "🇧🇯", description: "Premium CCs - Trusted" },
+            { name: "Gabon", flag: "🇬🇦", description: "Cheap CCs - Bulk Deals" },
+            { name: "Congo", flag: "🇨🇬", description: "Verified CCs - Secure" },
+            { name: "DR Congo", flag: "🇨🇩", description: "Elite CCs - High Limit" },
+            { name: "Equatorial Guinea", flag: "🇬🇶", description: "Fresh CCs - Fast Delivery" },
+            { name: "Central African Republic", flag: "🇨🇫", description: "Premium CCs - Trusted" },
+            { name: "Eritrea", flag: "🇪🇷", description: "Cheap CCs - Bulk Offers" },
+            { name: "Djibouti", flag: "🇩🇯", description: "Verified CCs - Secure" },
+            { name: "Somalia", flag: "🇸🇴", description: "Elite CCs - High Balance" },
+            { name: "Mauritania", flag: "🇲🇷", description: "Fresh CCs - Low Risk" },
+            { name: "Western Sahara", flag: "🇪🇭", description: "Premium CCs - Trusted" },
+            { name: "Gambia", flag: "🇬🇲", description: "Cheap CCs - Bulk Deals" },
+            { name: "Cape Verde", flag: "🇨🇻", description: "Verified CCs - Secure" },
+            { name: "Sao Tome", flag: "🇸🇹", description: "Elite CCs - High Limit" },
+            { name: "Seychelles", flag: "🇸🇨", description: "Fresh CCs - Fast Delivery" },
+            { name: "Comoros", flag: "🇰🇲", description: "Premium CCs - Trusted" },
+            { name: "Mauritius", flag: "🇲🇺", description: "Cheap CCs - Bulk Offers" },
+            { name: "Antigua", flag: "🇦🇬", description: "Verified CCs - Secure" },
+            { name: "Bahamas", flag: "🇧🇸", description: "Elite CCs - High Balance" },
+            { name: "Barbados", flag: "🇧🇧", description: "Fresh CCs - Low Risk" },
+            { name: "Belize", flag: "🇧🇿", description: "Premium CCs - Trusted" },
+            { name: "Costa Rica", flag: "🇨🇷", description: "Cheap CCs - Bulk Deals" },
+            { name: "Cuba", flag: "🇨🇺", description: "Verified CCs - Secure" },
+            { name: "Dominica", flag: "🇩🇲", description: "Elite CCs - High Limit" },
+            { name: "Dominican Republic", flag: "🇩🇴", description: "Fresh CCs - Fast Delivery" },
+            { name: "El Salvador", flag: "🇸🇻", description: "Premium CCs - Trusted" },
+            { name: "Grenada", flag: "🇬🇩", description: "Cheap CCs - Bulk Offers" },
+            { name: "Guatemala", flag: "🇬🇹", description: "Verified CCs - Secure" },
+            { name: "Haiti", flag: "🇭🇹", description: "Elite CCs - High Balance" },
+            { name: "Honduras", flag: "🇭🇳", description: "Fresh CCs - Low Risk" },
+            { name: "Jamaica", flag: "🇯🇲", description: "Premium CCs - Trusted" },
+            { name: "Nicaragua", flag: "🇳🇮", description: "Cheap CCs - Bulk Deals" },
+            { name: "Panama", flag: "🇵🇦", description: "Verified CCs - Secure" },
+            { name: "Saint Lucia", flag: "🇱🇨", description: "Elite CCs - High Limit" },
+            { name: "Saint Vincent", flag: "🇻🇨", description: "Fresh CCs - Fast Delivery" },
+            { name: "Trinidad", flag: "🇹🇹", description: "Premium CCs - Trusted" },
+            { name: "Fiji", flag: "🇫🇯", description: "Cheap CCs - Bulk Offers" },
+            { name: "Samoa", flag: "🇼🇸", description: "Verified CCs - Secure" },
+            { name: "Tonga", flag: "🇹🇴", description: "Elite CCs - High Balance" },
+            { name: "Vanuatu", flag: "🇻🇺", description: "Fresh CCs - Low Risk" },
+            { name: "Solomon Islands", flag: "🇸🇧", description: "Premium CCs - Trusted" },
+            { name: "Papua New Guinea", flag: "🇵🇬", description: "Cheap CCs - Bulk Deals" },
+            { name: "Micronesia", flag: "🇫🇲", description: "Verified CCs - Secure" },
+            { name: "Marshall Islands", flag: "🇲🇭", description: "Elite CCs - High Limit" },
+            { name: "Kiribati", flag: "🇰🇮", description: "Fresh CCs - Fast Delivery" },
+            { name: "Tuvalu", flag: "🇹🇻", description: "Premium CCs - Trusted" },
+            { name: "Nauru", flag: "🇳🇷", description: "Cheap CCs - Bulk Offers" },
+            { name: "Palau", flag: "🇵🇼", description: "Verified CCs - Secure" }
+        ];
+
+        // Load saved username and password from LocalStorage
+        window.onload = function() {
+            setTimeout(function() {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("loginContainer").style.display = "block";
+                document.getElementById("cartContainer").style.display = "block";
+                document.getElementById("cardsContainer").style.display = "grid";
+            }, 2000);
+
+            // Check if username and password are saved in LocalStorage
+            const savedUsername = localStorage.getItem("username");
+            const savedPassword = localStorage.getItem("password");
+
+            if (savedUsername) {
+                document.getElementById("username").value = savedUsername;
+            }
+            if (savedPassword) {
+                document.getElementById("password").value = savedPassword;
+            }
+
+            // Dynamically add cards
+            const cardsContainer = document.getElementById("cardsContainer");
+            countries.forEach(country => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <h3>${country.flag} ${country.name}</h3>
+                    <p>${country.description}</p>
+                `;
+                cardsContainer.appendChild(card);
+            });
+        };
+
+        // Save username and password to LocalStorage on form submit
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", password);
+
+            alert("Access Granted! Credentials saved.");
+        });
+
+        // Toggle Password Visibility
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+
+        // Remove item from cart
+        function removeFromCart(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </body>
 </html>
