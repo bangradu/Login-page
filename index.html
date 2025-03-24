@@ -9,18 +9,18 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
-            background-color: #1a1a1a;
+            background-color: #0d0d0d;
             color: #e0e0e0;
             overflow-x: hidden;
         }
 
         /* Navigation Bar */
         .navbar {
-            background-color: #2c2c2c;
+            background-color: #1a1a1a;
             padding: 15px;
             position: fixed;
             top: 0;
@@ -29,11 +29,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
         }
 
         .navbar a {
-            color: #00ff00;
+            color: #00ffff;
             text-decoration: none;
             font-size: 16px;
             transition: color 0.3s;
@@ -59,7 +59,7 @@
 
         .spinner {
             border: 4px solid #333;
-            border-top: 4px solid #00ff00;
+            border-top: 4px solid #00ffff;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -73,21 +73,21 @@
 
         /* Login Container */
         .login-container {
-            background-color: #2c2c2c;
+            background-color: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
             width: 100%;
             max-width: 400px;
             text-align: center;
             margin: 80px auto 20px;
             display: none;
-            border: 1px solid #00ff00;
+            border: 1px solid #00ffff;
         }
 
         h1 {
             font-size: 24px;
-            color: #00ff00;
+            color: #00ffff;
             margin-bottom: 20px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -97,7 +97,7 @@
             display: block;
             text-align: left;
             font-size: 12px;
-            color: #00ff00;
+            color: #00ffff;
             margin-bottom: 5px;
             margin-top: 10px;
         }
@@ -109,7 +109,7 @@
         input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #00ff00;
+            border: 1px solid #00ffff;
             border-radius: 5px;
             font-size: 14px;
             background-color: #333;
@@ -129,7 +129,7 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 16px;
-            color: #00ff00;
+            color: #00ffff;
         }
 
         .checkbox {
@@ -171,12 +171,12 @@
 
         .register-btn {
             background-color: #333;
-            color: #00ff00;
-            border: 1px solid #00ff00;
+            color: #00ffff;
+            border: 1px solid #00ffff;
         }
 
         .register-btn:hover {
-            background-color: #00ff00;
+            background-color: #00ffff;
             color: #000;
         }
 
@@ -188,7 +188,7 @@
 
         .links a {
             font-size: 12px;
-            color: #00ff00;
+            color: #00ffff;
             text-decoration: none;
         }
 
@@ -196,109 +196,135 @@
             color: #ff0000;
         }
 
-        /* Categories Section */
-        .category-section {
+        /* Category Selection */
+        .category-selection {
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            text-align: center;
         }
 
-        .category-section h2 {
+        .category-selection h2 {
             font-size: 20px;
-            color: #00ff00;
+            color: #00ffff;
             margin-bottom: 15px;
             text-transform: uppercase;
-            border-bottom: 1px solid #00ff00;
+            border-bottom: 1px solid #00ffff;
             padding-bottom: 5px;
         }
 
-        .cards-container {
+        .category-buttons {
             display: flex;
-            overflow-x: auto;
-            gap: 15px;
-            padding-bottom: 10px;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .cards-container::-webkit-scrollbar {
-            height: 8px;
+        .category-btn {
+            background-color: #333;
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .cards-container::-webkit-scrollbar-thumb {
-            background: #00ff00;
-            border-radius: 10px;
+        .category-btn:hover {
+            background-color: #00ffff;
+            color: #000;
         }
 
-        .cards-container::-webkit-scrollbar-track {
-            background: #333;
+        /* Cards Table */
+        .cards-table-section {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
         }
 
-        .card {
-            background-color: #2c2c2c;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
-            padding: 15px;
+        .cards-table-section h2 {
+            font-size: 20px;
+            color: #00ffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #00ffff;
+            padding-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1a1a1a;
+            border: 1px solid #00ffff;
+        }
+
+        th, td {
+            padding: 10px;
             text-align: center;
-            min-width: 200px;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #00ff00;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-        }
-
-        .card h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #00ff00;
-        }
-
-        .card p {
-            font-size: 12px;
-            color: #e0e0e0;
-            margin-bottom: 5px;
-        }
-
-        .card .rate {
+            border: 1px solid #00ffff;
             font-size: 14px;
-            color: #ff0000;
-            font-weight: bold;
         }
 
-        .card .stock {
-            font-size: 12px;
+        th {
+            background-color: #333;
+            color: #00ffff;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #e0e0e0;
+        }
+
+        .card-type {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .card-type img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .valid {
             color: #00ff00;
-            margin-top: 5px;
         }
 
-        .card .risk {
-            font-size: 12px;
+        .invalid {
             color: #ff0000;
-            margin-top: 5px;
         }
 
-        .card .warranty {
-            font-size: 12px;
-            color: #00ff00;
-            margin-top: 5px;
+        .add-to-cart-btn {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #cc0000;
         }
 
         /* Cart Section */
         .cart-container {
-            background-color: #2c2c2c;
+            background-color: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
             width: 100%;
             max-width: 600px;
             margin: 20px auto;
-            border: 1px solid #00ff00;
+            border: 1px solid #00ffff;
         }
 
         .cart-container h2 {
             font-size: 20px;
-            color: #00ff00;
+            color: #00ffff;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -308,7 +334,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px;
-            border-bottom: 1px solid #00ff00;
+            border-bottom: 1px solid #00ffff;
             margin-bottom: 10px;
         }
 
@@ -334,7 +360,7 @@
         .checkout-btn {
             width: 100%;
             padding: 10px;
-            background-color: #00ff00;
+            background-color: #00ffff;
             color: #000;
             border: none;
             border-radius: 5px;
@@ -345,24 +371,88 @@
         }
 
         .checkout-btn:hover {
-            background-color: #00cc00;
+            background-color: #00cccc;
+        }
+
+        /* Payment Popup */
+        .payment-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .payment-content {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            border: 1px solid #00ffff;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .payment-content h2 {
+            font-size: 20px;
+            color: #00ffff;
+            margin-bottom: 15px;
+        }
+
+        .payment-content p {
+            font-size: 14px;
+            color: #e0e0e0;
+            margin-bottom: 10px;
+        }
+
+        .payment-content .btc-address {
+            font-size: 14px;
+            color: #00ffff;
+            word-break: break-all;
+            margin-bottom: 15px;
+        }
+
+        .payment-content img {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .close-btn:hover {
+            background-color: #cc0000;
         }
 
         /* Customer Support Section */
         .support-section {
-            background-color: #2c2c2c;
+            background-color: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
             width: 100%;
             max-width: 600px;
             margin: 20px auto;
-            border: 1px solid #00ff00;
+            border: 1px solid #00ffff;
         }
 
         .support-section h2 {
             font-size: 20px;
-            color: #00ff00;
+            color: #00ffff;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -375,7 +465,7 @@
 
         .support-section input, .support-section textarea {
             padding: 10px;
-            border: 1px solid #00ff00;
+            border: 1px solid #00ffff;
             border-radius: 5px;
             background-color: #333;
             color: #e0e0e0;
@@ -400,7 +490,7 @@
             text-align: center;
             margin: 20px;
             display: none;
-            background-color: #2c2c2c;
+            background-color: #1a1a1a;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
@@ -442,27 +532,35 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #00ff00;
+            background-color: #00ffff;
             color: #000;
             padding: 10px 20px;
             border-radius: 20px;
             text-decoration: none;
             font-size: 14px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
             transition: background-color 0.3s;
         }
 
         .live-chat:hover {
-            background-color: #00cc00;
+            background-color: #00cccc;
         }
 
         @media (max-width: 400px) {
             .login-container, .cart-container, .support-section {
                 margin: 10px;
             }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 5px;
+            }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -510,45 +608,53 @@
         </form>
     </div>
 
+    <!-- Category Selection -->
+    <div class="category-selection" id="categorySelection">
+        <h2>Select Category</h2>
+        <div class="category-buttons">
+            <button class="category-btn" onclick="showCards('Premium CCs')">Premium CCs</button>
+            <button class="category-btn" onclick="showCards('Bulk Deals')">Bulk Deals</button>
+            <button class="category-btn" onclick="showCards('High Limit')">High Limit</button>
+            <button class="category-btn" onclick="showCards('Low Risk')">Low Risk</button>
+        </div>
+    </div>
+
+    <!-- Cards Table -->
+    <div class="cards-table-section" id="cardsTableSection">
+        <h2 id="categoryTitle"></h2>
+        <table id="cardsTable">
+            <thead>
+                <tr>
+                    <th>Card Number</th>
+                    <th>Type</th>
+                    <th>Level</th>
+                    <th>Expiry</th>
+                    <th>Valid</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="cardsTableBody"></tbody>
+        </table>
+    </div>
+
     <!-- Cart Container -->
     <div class="cart-container" id="cartContainer">
         <h2>🛒 YOUR CART</h2>
-        <div class="cart-items" id="cartItems">
-            <div class="cart-item">
-                <p>USA Premium CC - $80 (100% Validated)</p>
-                <button onclick="removeFromCart(this)">Remove</button>
-            </div>
-            <div class="cart-item">
-                <p>Japan Bulk CC - $60 (Medium Risk)</p>
-                <button onclick="removeFromCart(this)">Remove</button>
-            </div>
-            <div class="cart-item">
-                <p>Germany High Limit CC - $90 (100% Validated)</p>
-                <button onclick="removeFromCart(this)">Remove</button>
-            </div>
+        <div class="cart-items" id="cartItems"></div>
+        <button class="checkout-btn" onclick="showPaymentPopup()">Checkout with BTC</button>
+    </div>
+
+    <!-- Payment Popup -->
+    <div class="payment-popup" id="paymentPopup">
+        <div class="payment-content">
+            <h2>Complete Payment</h2>
+            <p>Please send the payment to the following BTC address:</p>
+            <p class="btc-address">1GxpPWCrytdSNqwCubPfNzwHADu7NNJu99</p>
+            <img src="https://via.placeholder.com/150" alt="QR Code">
+            <p>After payment, your order will be processed within 24 hours.</p>
+            <button class="close-btn" onclick="closePaymentPopup()">Close</button>
         </div>
-        <button class="checkout-btn" onclick="checkoutWithBTC()">Checkout with BTC</button>
-    </div>
-
-    <!-- Categories and Cards -->
-    <div class="category-section" id="premiumCCs">
-        <h2>Premium CCs</h2>
-        <div class="cards-container" id="premiumCards"></div>
-    </div>
-
-    <div class="category-section" id="bulkDeals">
-        <h2>Bulk Deals</h2>
-        <div class="cards-container" id="bulkCards"></div>
-    </div>
-
-    <div class="category-section" id="highLimit">
-        <h2>High Limit CCs</h2>
-        <div class="cards-container" id="highLimitCards"></div>
-    </div>
-
-    <div class="category-section" id="lowRisk">
-        <h2>Low Risk CCs</h2>
-        <div class="cards-container" id="lowRiskCards"></div>
     </div>
 
     <!-- Customer Support Section -->
@@ -573,33 +679,20 @@
     <a href="#" class="live-chat">💬 Live Chat</a>
 
     <script>
-        // List of premium countries with updated rates, risk, and warranty
-        const countries = [
-            { name: "USA", flag: "🇺🇸", category: "Premium CCs", rate: "$80", stock: "10 in stock", lastSold: "2 mins ago", warranty: "100% Validated" },
-            { name: "UK", flag: "🇬🇧", category: "Premium CCs", rate: "$85", stock: "8 in stock", lastSold: "3 mins ago", warranty: "100% Validated" },
-            { name: "Germany", flag: "🇩🇪", category: "High Limit", rate: "$90", stock: "5 in stock", lastSold: "5 mins ago", warranty: "100% Validated" },
-            { name: "France", flag: "🇫🇷", category: "Premium CCs", rate: "$82", stock: "9 in stock", lastSold: "4 mins ago", warranty: "100% Validated" },
-            { name: "Canada", flag: "🇨🇦", category: "High Limit", rate: "$95", stock: "4 in stock", lastSold: "6 mins ago", warranty: "100% Validated" },
-            { name: "Australia", flag: "🇦🇺", category: "Bulk Deals", rate: "$60", stock: "40 in stock", lastSold: "7 mins ago", risk: "Medium Risk" },
-            { name: "Japan", flag: "🇯🇵", category: "Bulk Deals", rate: "$65", stock: "35 in stock", lastSold: "8 mins ago", risk: "Medium Risk" },
-            { name: "South Korea", flag: "🇰🇷", category: "Low Risk", rate: "$70", stock: "15 in stock", lastSold: "10 mins ago", risk: "Low Risk" },
-            { name: "Italy", flag: "🇮🇹", category: "Premium CCs", rate: "$88", stock: "7 in stock", lastSold: "9 mins ago", warranty: "100% Validated" },
-            { name: "Spain", flag: "🇪🇸", category: "High Limit", rate: "$92", stock: "6 in stock", lastSold: "11 mins ago", warranty: "100% Validated" },
-            { name: "Switzerland", flag: "🇨🇭", category: "Premium CCs", rate: "$90", stock: "5 in stock", lastSold: "12 mins ago", warranty: "100% Validated" },
-            { name: "Netherlands", flag: "🇳🇱", category: "Bulk Deals", rate: "$62", stock: "30 in stock", lastSold: "13 mins ago", risk: "Medium Risk" },
-            { name: "Sweden", flag: "🇸🇪", category: "Low Risk", rate: "$68", stock: "20 in stock", lastSold: "14 mins ago", risk: "Low Risk" },
-            { name: "Norway", flag: "🇳🇴", category: "High Limit", rate: "$94", stock: "4 in stock", lastSold: "15 mins ago", warranty: "100% Validated" },
-            { name: "Denmark", flag: "🇩🇰", category: "Premium CCs", rate: "$87", stock: "8 in stock", lastSold: "16 mins ago", warranty: "100% Validated" },
-            { name: "Finland", flag: "🇫🇮", category: "Bulk Deals", rate: "$64", stock: "25 in stock", lastSold: "17 mins ago", risk: "Medium Risk" },
-            { name: "Ireland", flag: "🇮🇪", category: "Low Risk", rate: "$66", stock: "18 in stock", lastSold: "18 mins ago", risk: "Low Risk" },
-            { name: "Belgium", flag: "🇧🇪", category: "High Limit", rate: "$93", stock: "5 in stock", lastSold: "19 mins ago", warranty: "100% Validated" },
-            { name: "Austria", flag: "🇦🇹", category: "Premium CCs", rate: "$86", stock: "9 in stock", lastSold: "20 mins ago", warranty: "100% Validated" },
-            { name: "Singapore", flag: "🇸🇬", category: "Bulk Deals", rate: "$61", stock: "35 in stock", lastSold: "21 mins ago", risk: "Medium Risk" },
-            { name: "New Zealand", flag: "🇳🇿", category: "Low Risk", rate: "$69", stock: "15 in stock", lastSold: "22 mins ago", risk: "Low Risk" },
-            { name: "UAE", flag: "🇦🇪", category: "High Limit", rate: "$91", stock: "6 in stock", lastSold: "23 mins ago", warranty: "100% Validated" },
-            { name: "Saudi Arabia", flag: "🇸🇦", category: "Premium CCs", rate: "$89", stock: "7 in stock", lastSold: "24 mins ago", warranty: "100% Validated" },
-            { name: "Qatar", flag: "🇶🇦", category: "Bulk Deals", rate: "$63", stock: "30 in stock", lastSold: "25 mins ago", risk: "Medium Risk" },
-            { name: "Israel", flag: "🇮🇱", category: "Low Risk", rate: "$67", stock: "20 in stock", lastSold: "26 mins ago", risk: "Low Risk" }
+        // List of cards with updated details
+        const cards = [
+            { id: 1, category: "Premium CCs", number: "522446", type: "CREDIT", brand: "MasterCard", level: "ELECTRONIC", expiry: "XX/23", valid: true, price: "$80", warranty: "100% Validated" },
+            { id: 2, category: "Premium CCs", number: "554900", type: "CREDIT", brand: "MasterCard", level: "PLATINUM", expiry: "XX/26", valid: false, price: "$85", warranty: "100% Validated" },
+            { id: 3, category: "Bulk Deals", number: "400570", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$60", risk: "Medium Risk" },
+            { id: 4, category: "Bulk Deals", number: "400570", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/24", valid: true, price: "$62", risk: "Medium Risk" },
+            { id: 5, category: "High Limit", number: "506775", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/24", valid: false, price: "$90", warranty: "100% Validated" },
+            { id: 6, category: "High Limit", number: "430675", type: "CREDIT", brand: "Visa", level: "PLATINUM", expiry: "XX/25", valid: false, price: "$92", warranty: "100% Validated" },
+            { id: 7, category: "Low Risk", number: "550209", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/28", valid: true, price: "$66", risk: "Low Risk" },
+            { id: 8, category: "Low Risk", number: "546325", type: "CREDIT", brand: "MasterCard", level: "N/A", expiry: "XX/25", valid: true, price: "$68", risk: "Low Risk" },
+            { id: 9, category: "Premium CCs", number: "491675", type: "CREDIT", brand: "Visa", level: "PREMIER", expiry: "XX/27", valid: false, price: "$88", warranty: "100% Validated" },
+            { id: 10, category: "Bulk Deals", number: "400881", type: "CREDIT", brand: "Visa", level: "N/A", expiry: "XX/25", valid: false, price: "$64", risk: "Medium Risk" },
+            { id: 11, category: "High Limit", number: "833120", type: "UNKNOWN", brand: "Unknown", level: "N/A", expiry: "XX/24", valid: false, price: "$94", warranty: "100% Validated" },
+            { id: 12, category: "Low Risk", number: "483042", type: "CREDIT", brand: "Visa", level: "PLATINUM", expiry: "XX/24", valid: false, price: "$70", risk: "Low Risk" }
         ];
 
         // Load saved username and password from LocalStorage
@@ -607,11 +700,8 @@
             setTimeout(function() {
                 document.getElementById("loading").style.display = "none";
                 document.getElementById("loginContainer").style.display = "block";
+                document.getElementById("categorySelection").style.display = "block";
                 document.getElementById("cartContainer").style.display = "block";
-                document.getElementById("premiumCCs").style.display = "block";
-                document.getElementById("bulkDeals").style.display = "block";
-                document.getElementById("highLimit").style.display = "block";
-                document.getElementById("lowRisk").style.display = "block";
             }, 2000);
 
             // Check if username and password are saved in LocalStorage
@@ -624,36 +714,6 @@
             if (savedPassword) {
                 document.getElementById("password").value = savedPassword;
             }
-
-            // Dynamically add cards to respective categories
-            const premiumCards = document.getElementById("premiumCards");
-            const bulkCards = document.getElementById("bulkCards");
-            const highLimitCards = document.getElementById("highLimitCards");
-            const lowRiskCards = document.getElementById("lowRiskCards");
-
-            countries.forEach(country => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-                    <h3>${country.flag} ${country.name}</h3>
-                    <p>${country.category}</p>
-                    <p class="rate">${country.rate}</p>
-                    <p class="stock">${country.stock}</p>
-                    <p>Last Sold: ${country.lastSold}</p>
-                    ${country.risk ? `<p class="risk">${country.risk}</p>` : ''}
-                    ${country.warranty ? `<p class="warranty">${country.warranty}</p>` : ''}
-                `;
-
-                if (country.category === "Premium CCs") {
-                    premiumCards.appendChild(card);
-                } else if (country.category === "Bulk Deals") {
-                    bulkCards.appendChild(card);
-                } else if (country.category === "High Limit") {
-                    highLimitCards.appendChild(card);
-                } else if (country.category === "Low Risk") {
-                    lowRiskCards.appendChild(card);
-                }
-            });
         };
 
         // Save username and password to LocalStorage on form submit
@@ -679,15 +739,68 @@
             }
         }
 
+        // Show cards for selected category
+        function showCards(category) {
+            const cardsTableSection = document.getElementById("cardsTableSection");
+            const categoryTitle = document.getElementById("categoryTitle");
+            const cardsTableBody = document.getElementById("cardsTableBody");
+
+            categoryTitle.textContent = category;
+            cardsTableBody.innerHTML = "";
+
+            const filteredCards = cards.filter(card => card.category === category);
+
+            filteredCards.forEach(card => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${card.number}</td>
+                    <td class="card-type">
+                        ${card.brand === "Visa" ? '<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">' : 
+                        card.brand === "MasterCard" ? '<img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="MasterCard">' : 
+                        '<img src="https://via.placeholder.com/20" alt="Unknown">'} 
+                        ${card.type}
+                    </td>
+                    <td>${card.level}</td>
+                    <td>${card.expiry}</td>
+                    <td class="${card.valid ? 'valid' : 'invalid'}">${card.valid ? '✔️' : '❌'}</td>
+                    <td>${card.price} ${card.risk ? `(${card.risk})` : card.warranty ? `(${card.warranty})` : ''}</td>
+                    <td><button class="add-to-cart-btn" onclick="addToCart(${card.id})">Add to Cart</button></td>
+                `;
+                cardsTableBody.appendChild(row);
+            });
+
+            cardsTableSection.style.display = "block";
+            window.scrollTo({ top: cardsTableSection.offsetTop, behavior: "smooth" });
+        }
+
+        // Add to cart
+        function addToCart(cardId) {
+            const card = cards.find(c => c.id === cardId);
+            const cartItems = document.getElementById("cartItems");
+            const cartItem = document.createElement("div");
+            cartItem.className = "cart-item";
+            cartItem.innerHTML = `
+                <p>${card.number} - ${card.type} (${card.level}) - ${card.price}</p>
+                <button onclick="removeFromCart(this)">Remove</button>
+            `;
+            cartItems.appendChild(cartItem);
+        }
+
         // Remove item from cart
         function removeFromCart(button) {
             button.parentElement.remove();
         }
 
-        // Checkout with BTC
-        function checkoutWithBTC() {
-            const btcAddress = "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"; // Tumhara BTC address daal diya
-            alert(`Please send payment to the following BTC address: ${btcAddress}\n\nAfter payment, your order will be processed.`);
+        // Show payment popup
+        function showPaymentPopup() {
+            const paymentPopup = document.getElementById("paymentPopup");
+            paymentPopup.style.display = "flex";
+        }
+
+        // Close payment popup
+        function closePaymentPopup() {
+            const paymentPopup = document.getElementById("paymentPopup");
+            paymentPopup.style.display = "none";
         }
     </script>
 </body>
