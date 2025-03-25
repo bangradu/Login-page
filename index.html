@@ -53,14 +53,14 @@
         </form>
     </div>
 
-    <!-- Cards Table -->
-    <div class="cards-table-section" id="cardsTableSection">
-        <h2>All Cards</h2>
+    <!-- CC List Section -->
+    <div class="cc-list-section" id="ccListSection">
+        <h2>Available Cards</h2>
         <div class="table-header">
             <button class="reset-btn">Reset</button>
             <button class="checkout-btn">Checkout <span id="cartCount">0</span></button>
         </div>
-        <table id="cardsTable">
+        <table id="ccTable">
             <thead>
                 <tr>
                     <th>BIN</th>
@@ -71,7 +71,7 @@
                     <th>Refund</th>
                 </tr>
             </thead>
-            <tbody id="cardsTableBody"></tbody>
+            <tbody id="ccTableBody"></tbody>
         </table>
     </div>
 
@@ -87,25 +87,22 @@
         </div>
     </div>
 
-    <!-- Card Details Popup -->
-    <div class="card-details-popup" id="cardDetailsPopup">
+    <!-- Card Details Section -->
+    <div class="card-details-section" id="cardDetailsSection">
+        <h2>Card Details</h2>
         <div class="card-details-content">
-            <h2>Card Details</h2>
-            <div class="card-info">
-                <p><strong>Card Number:</strong> <span id="cardNumber"></span></p>
-                <p><strong>Expiration Date:</strong> <span id="cardExpiry"></span></p>
-                <p><strong>CVV2/CVC2/CID:</strong> <span id="cardCvv"></span></p>
-            </div>
+            <h3>Card Details</h3>
+            <p><strong>Card Number:</strong> <span id="cardNumber"></span></p>
+            <p><strong>Expiration Date:</strong> <span id="expiryDate"></span></p>
+            <p><strong>CVV2/CVC2/CID:</strong> <span id="cvv"></span></p>
             <h3>BIN Details</h3>
-            <div class="bin-info">
-                <p><strong>Brand:</strong> <span id="binBrand"></span></p>
-                <p><strong>Type:</strong> <span id="binType"></span></p>
-                <p><strong>Level:</strong> <span id="binLevel"></span></p>
-                <p><strong>Issuer:</strong> <span id="binIssuer"></span></p>
-                <p><strong>Country:</strong> <span id="binCountry"></span></p>
-            </div>
-            <button class="close-btn" onclick="closeCardDetails()">Close</button>
+            <p><strong>Brand:</strong> <span id="brand"></span></p>
+            <p><strong>Type:</strong> <span id="type"></span></p>
+            <p><strong>Level:</strong> <span id="level"></span></p>
+            <p><strong>Issuer:</strong> <span id="issuer"></span></p>
+            <p><strong>Country:</strong> <span id="country"></span></p>
         </div>
+        <button class="back-btn" onclick="backToList()">Back to List</button>
     </div>
 
     <script src="script.js"></script>
