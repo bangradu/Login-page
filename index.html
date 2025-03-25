@@ -56,18 +56,19 @@
     <!-- Cards Table -->
     <div class="cards-table-section" id="cardsTableSection">
         <h2>All Cards</h2>
+        <div class="table-header">
+            <button class="reset-btn">Reset</button>
+            <button class="checkout-btn">Checkout <span id="cartCount">0</span></button>
+        </div>
         <table id="cardsTable">
             <thead>
                 <tr>
-                    <th>Flag</th>
+                    <th>BIN</th>
                     <th>Country</th>
-                    <th>Card Number</th>
-                    <th>Type</th>
-                    <th>Level</th>
-                    <th>Expiry</th>
-                    <th>Valid</th>
+                    <th>Valid Thru</th>
+                    <th>Card Details</th>
                     <th>Price</th>
-                    <th>Action</th>
+                    <th>Refund</th>
                 </tr>
             </thead>
             <tbody id="cardsTableBody"></tbody>
@@ -82,63 +83,29 @@
             <p class="btc-address">1GxpPWCrytdSNqwCubPfNzwHADu7NNJu99</p>
             <img src="https://via.placeholder.com/150" alt="QR Code">
             <p>After payment, your order will be processed within 24 hours.</p>
-            <button class="close-btn" onclick="closePaymentPopup()">Close</button>
+            <button class="close-btn" onclick="completePayment()">Confirm Payment</button>
         </div>
     </div>
 
-    <!-- Chat Login Popup -->
-    <div class="chat-login-popup" id="chatLoginPopup">
-        <div class="chat-login-content">
-            <h2>Chat Access</h2>
-            <p>This option will be available after buying a card.</p>
+    <!-- Card Details Popup -->
+    <div class="card-details-popup" id="cardDetailsPopup">
+        <div class="card-details-content">
+            <h2>Card Details</h2>
+            <div class="card-info">
+                <p><strong>Card Number:</strong> <span id="cardNumber"></span></p>
+                <p><strong>Expiration Date:</strong> <span id="cardExpiry"></span></p>
+                <p><strong>CVV2/CVC2/CID:</strong> <span id="cardCvv"></span></p>
+            </div>
+            <h3>BIN Details</h3>
+            <div class="bin-info">
+                <p><strong>Brand:</strong> <span id="binBrand"></span></p>
+                <p><strong>Type:</strong> <span id="binType"></span></p>
+                <p><strong>Level:</strong> <span id="binLevel"></span></p>
+                <p><strong>Issuer:</strong> <span id="binIssuer"></span></p>
+                <p><strong>Country:</strong> <span id="binCountry"></span></p>
+            </div>
+            <button class="close-btn" onclick="closeCardDetails()">Close</button>
         </div>
-    </div>
-
-    <!-- Message Login Popup -->
-    <div class="message-login-popup" id="messageLoginPopup">
-        <div class="message-login-content">
-            <h2>Messages Access</h2>
-            <p>Please login to access your messages.</p>
-            <form id="messageLoginForm">
-                <label for="messageUsername">USERNAME</label>
-                <div class="input-with-icon">
-                    <input type="text" id="messageUsername" name="messageUsername" placeholder="Enter Username">
-                    <span class="icon">👤</span>
-                </div>
-
-                <label for="messagePassword">PASSWORD</label>
-                <div class="input-with-icon">
-                    <input type="password" id="messagePassword" name="messagePassword" placeholder="Enter Password">
-                    <span class="icon">🔒</span>
-                </div>
-
-                <button type="submit" class="login-btn">LOGIN</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Customer Support Section -->
-    <div class="support-section" id="supportSection">
-        <h2>Customer Support</h2>
-        <form>
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Your Email" required>
-            <textarea placeholder="Your Message" rows="5" required></textarea>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-
-    <!-- Message Box Button -->
-    <div class="message-box-btn" onclick="openMessageLogin()">📩 Messages</div>
-
-    <!-- Chat Support Button -->
-    <div class="chat-support-btn" onclick="openChatLogin()">💬 Chat</div>
-
-    <!-- Fallback Content for Error -->
-    <div class="error-fallback" id="errorFallback">
-        <h2>ERROR DETECTED</h2>
-        <p>Connection failed. Please try again or contact support.</p>
-        <a href="#" onclick="history.back()">Go Back</a>
     </div>
 
     <script src="script.js"></script>
